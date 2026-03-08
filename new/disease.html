@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Disease | HelaGrow AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="disease.css">
+</head>
+
+<body class="disease-page">
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <div class="logo">
+      <i class="fas fa-leaf"></i>
+      Hela<span>Grow</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">
+        <i class="fas fa-home"></i>
+        Home
+      </a>
+      <a href="#overview" class="nav-link active">
+        <i class="fas fa-info-circle"></i>
+        About
+      </a> 
+      <a href="disease.html" class="nav-link active">
+        <i class="fas fa-info-circle"></i>
+        Diseases
+      </a>      
+      <a href="iot.html" class="btn-nav">
+        <i class="fas fa-satellite-dish"></i>
+        Launch IoT
+      </a>
+    </div>
+    <div class="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO HEADER ===== -->
+<header class="about-header" id="overview">
+  <div class="container">
+    <div class="header-content">
+      <div class="header-badge">
+        <i class="fas fa-leaf"></i>
+        <span>Centella Asiatica</span>
+      </div>
+      <h1>Understanding Gotu Kola</h1>
+      <p class="subtitle">Comprehensive guide to Centella Asiatica cultivation, diseases, and AI-powered detection</p>
+    </div>
+  </div>
+</header>
+
+<!-- ===== PLANT OVERVIEW ===== -->
+<section class="plant-overview">
+  <div class="container">
+    <div class="overview-grid">
+      <div class="overview-content">
+        <h2>
+          <i class="fas fa-seedling"></i>
+          About Centella Asiatica
+        </h2>
+        <p class="lead">
+          <strong>Centella Asiatica</strong>, commonly known as <strong>Gotu Kola</strong> or <strong>Gotukola</strong> 
+          in Sri Lanka, is a perennial herbaceous plant native to Asian wetlands. It has been used for centuries 
+          in traditional medicine and is highly valued for its medicinal properties.
+        </p>
+        
+        <div class="info-cards">
+          <div class="info-card">
+            <div class="info-icon">
+              <i class="fas fa-leaf"></i>
+            </div>
+            <h3>Scientific Name</h3>
+            <p>Centella Asiatica (L.) Urban</p>
+          </div>
+          
+          <div class="info-card">
+            <div class="info-icon">
+              <i class="fas fa-globe"></i>
+            </div>
+            <h3>Family</h3>
+            <p>Apiaceae (Umbelliferae)</p>
+          </div>
+          
+          <div class="info-card">
+            <div class="info-icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <h3>Origin</h3>
+            <p>Asia, Pacific Islands</p>
+          </div>
+        </div>
+
+        <div class="characteristics">
+          <h3>Key Characteristics</h3>
+          <ul>
+            <li><i class="fas fa-check"></i> Small, fan-shaped leaves with scalloped edges</li>
+            <li><i class="fas fa-check"></i> Grows in moist, shaded environments</li>
+            <li><i class="fas fa-check"></i> Rich in triterpenoid compounds (asiaticoside, madecassoside)</li>
+            <li><i class="fas fa-check"></i> Used for wound healing, cognitive enhancement, and skin health</li>
+            <li><i class="fas fa-check"></i> Thrives in temperatures between 20-30°C</li>
+            <li><i class="fas fa-check"></i> Requires high humidity (60-80%) and adequate moisture</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="overview-visual">
+        <div class="plant-image-placeholder">
+          <div class="plant-icon">
+            <i class="fas fa-spa"></i>
+          </div>
+          <p>Centella Asiatica Plant</p>
+        </div>
+        
+        <div class="growth-requirements">
+          <h3>Optimal Growth Conditions</h3>
+          <div class="requirement-item">
+            <span class="req-label">
+              <i class="fas fa-temperature-high"></i>
+              Temperature
+            </span>
+            <span class="req-value">20-30°C</span>
+          </div>
+          <div class="requirement-item">
+            <span class="req-label">
+              <i class="fas fa-tint"></i>
+              Humidity
+            </span>
+            <span class="req-value">60-80%</span>
+          </div>
+          <div class="requirement-item">
+            <span class="req-label">
+              <i class="fas fa-sun"></i>
+              Light
+            </span>
+            <span class="req-value">Partial Shade</span>
+          </div>
+          <div class="requirement-item">
+            <span class="req-label">
+              <i class="fas fa-flask"></i>
+              Soil pH
+            </span>
+            <span class="req-value">6.0-7.0</span>
+          </div>
+          <div class="requirement-item">
+            <span class="req-label">
+              <i class="fas fa-droplet"></i>
+              Soil Moisture
+            </span>
+            <span class="req-value">Consistently Moist</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DISEASES SECTION ===== -->
+<section class="diseases-section" id="diseases">
+  <div class="container">
+    <div class="section-header">
+      <h2>
+        <i class="fas fa-bug"></i>
+        Common Diseases & Pests
+      </h2>
+      <p>Understanding and identifying diseases affecting Centella Asiatica</p>
+    </div>
+
+    <div class="disease-cards">
+      
+      <!-- Red Spider Mite -->
+      <div class="disease-card pest">
+        <div class="disease-header">
+          <div class="disease-icon">
+            <i class="fas fa-spider"></i>
+          </div>
+          <div class="disease-title">
+            <h3>Red Spider Mite</h3>
+            <span class="disease-type pest-type">Pest Infestation</span>
+          </div>
+        </div>
+        
+        <div class="disease-body">
+          <div class="disease-section">
+            <h4><i class="fas fa-microscope"></i> Description</h4>
+            <p>
+              <strong>Tetranychus urticae</strong> - Tiny arachnids that feed on plant sap, causing significant 
+              damage to Centella Asiatica leaves. They are barely visible to the naked eye (0.5mm) and appear 
+              as red or brown dots.
+            </p>
+          </div>
+
+          <div class="disease-section">
+            <h4><i class="fas fa-eye"></i> Symptoms</h4>
+            <ul class="symptom-list">
+              <li><i class="fas fa-circle"></i> Fine webbing on undersides of leaves</li>
+              <li><i class="fas fa-circle"></i> Yellow or white stippling on leaf surfaces</li>
+              <li><i class="fas fa-circle"></i> Leaves become bronzed and dry</li>
+              <li><i class="fas fa-circle"></i> Severe infestations cause leaf drop</li>
+              <li><i class="fas fa-circle"></i> Stunted plant growth</li>
+            </ul>
+          </div>
+
+          <div class="disease-section">
+            <h4><i class="fas fa-heartbeat"></i> Conditions</h4>
+            <p>
+              Thrives in hot, dry conditions. Most active when temperature exceeds 27°C and humidity 
+              is below 50%. Rapid reproduction (new generation every 5-20 days).
+            </p>
+          </div>
+
+          <div class="disease-section">
+            <h4><i class="fas fa-shield-alt"></i> Prevention & Treatment</h4>
+            <ul class="treatment-list">
+              <li><i class="fas fa-check-circle"></i> Maintain high humidity (60-80%)</li>
+              <li><i class="fas fa-check-circle"></i> Regular water spraying on leaf undersides</li>
+              <li><i class="fas fa-check-circle"></i> Introduce predatory mites (Phytoseiulus persimilis)</li>
+              <li><i class="fas fa-check-circle"></i> Use neem oil spray (organic treatment)</li>
+              <li><i class="fas fa-check-circle"></i> Apply insecticidal soap</li>
+              <li><i class="fas fa-check-circle"></i> Remove heavily infested leaves</li>
+              <li><i class="fas fa-check-circle"></i> Avoid water stress - keep soil consistently moist</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leaf Spot Disease -->
+      <div class="disease-card fungal">
+        <div class="disease-header">
+          <div class="disease-icon">
+            <i class="fas fa-virus"></i>
+          </div>
+          <div class="disease-title">
+            <h3>Leaf Spot Disease</h3>
+            <span class="disease-type fungal-type">Fungal Infection</span>
+          </div>
+        </div>
+        
+        <div class="disease-body">
+          <div class="disease-section">
+            <h4><i class="fas fa-microscope"></i> Description</h4>
+            <p>
+              Caused by various fungal pathogens including <strong>Cercospora</strong> and <strong>Alternaria</strong> 
+              species. Common in humid conditions with poor air circulation.
+            </p>
+          </div>
+
+          <div class="disease-section">
+            <h4><i class="fas fa-eye"></i> Symptoms</h4>
+            <ul class="symptom-list">
+              <li><i class="fas fa-circle"></i> Circular brown or black spots on leaves</li>
+              <li><i class="fas fa-circle"></i> Yellow halos around spots</li>
+              <li><i class="fas fa-circle"></i> Spots may merge to form larger necrotic areas</li>
+              <li><i class="fas fa-circle"></i> Premature leaf yellowing and drop</li>
+              <li><i class="fas fa-circle"></i> Reduced plant vigor</li>
+            </ul>
+          </div>
+
+          <div class="disease-section">
+            <h4><i class="fas fa-heartbeat"></i> Conditions</h4>
+            <p>
+              Favored by excessive moisture on leaves, high humidity (>85%), poor air circulation, 
+              and temperatures between 20-28°C. Spreads rapidly during rainy seasons.
+            </p>
+          </div>
+
+          <div class="disease-section">
+            <h4><i class="fas fa-shield-alt"></i> Prevention & Treatment</h4>
+            <ul class="treatment-list">
+              <li><i class="fas fa-check-circle"></i> Ensure proper plant spacing for air circulation</li>
+              <li><i class="fas fa-check-circle"></i> Water at soil level, avoid wetting leaves</li>
+              <li><i class="fas fa-check-circle"></i> Remove and destroy infected leaves immediately</li>
+              <li><i class="fas fa-check-circle"></i> Apply copper-based fungicides</li>
+              <li><i class="fas fa-check-circle"></i> Use organic fungicides (neem oil, baking soda solution)</li>
+              <li><i class="fas fa-check-circle"></i> Avoid overhead irrigation</li>
+              <li><i class="fas fa-check-circle"></i> Practice crop rotation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Root Rot -->
+      <div class="disease-card fungal">
+        <div class="disease-header">
+          <div class="disease-icon">
+            <i class="fas fa-disease"></i>
+          </div>
+          <div class="disease-title">
+            <h3>Root Rot</h3>
+            <span class="disease-type fungal-type">Fungal Infection</span>
+          </div>
+        </div>
+        
+        <div class="disease-body">
+          <div class="disease-section">
+            <h4><i class="fas fa-microscope"></i> Description</h4>
+            <p>
+              Caused by soil-borne pathogens like <strong>Pythium</strong>, <strong>Phytophthora</strong>, 
+              and <strong>Rhizoctonia</strong>. Results from waterlogged soil conditions and poor drainage.
+            </p>
+          </div>
+
+          <div class="disease-section">
+            <h4><i class="fas fa-eye"></i> Symptoms</h4>
+            <ul class="symptom-list">
+              <li><i class="fas fa-circle"></i> Wilting despite adequate soil moisture</li>
+              <li><i class="fas fa-circle"></i> Yellowing and drooping leaves</li>
+              <li><i class="fas fa-circle"></i> Dark, mushy roots with foul odor</li>
+              <li><i class="fas fa-circle"></i> Stunted growth and plant collapse</li>
+              <li><i class="fas fa-circle"></i> Brown discoloration at base of stems</li>
+            </ul>
+          </div>
+
+          <div class="disease-section">
+            <h4><i class="fas fa-heartbeat"></i> Conditions</h4>
+            <p>
+              Develops in waterlogged, poorly drained soils with insufficient oxygen. Excessive irrigation, 
+              heavy clay soils, and poor drainage are primary causes.
+            </p>
+          </div>
+
+          <div class="disease-section">
+            <h4><i class="fas fa-shield-alt"></i> Prevention & Treatment</h4>
+            <ul class="treatment-list">
+              <li><i class="fas fa-check-circle"></i> Ensure excellent soil drainage</li>
+              <li><i class="fas fa-check-circle"></i> Avoid overwatering - monitor soil moisture</li>
+              <li><i class="fas fa-check-circle"></i> Use raised beds in heavy soils</li>
+              <li><i class="fas fa-check-circle"></i> Apply biological fungicides (Trichoderma)</li>
+              <li><i class="fas fa-check-circle"></i> Remove and destroy infected plants</li>
+              <li><i class="fas fa-check-circle"></i> Improve soil structure with organic matter</li>
+              <li><i class="fas fa-check-circle"></i> Sterilize soil before replanting</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Powdery Mildew -->
+      <div class="disease-card fungal">
+        <div class="disease-header">
+          <div class="disease-icon">
+            <i class="fas fa-bacteria"></i>
+          </div>
+          <div class="disease-title">
+            <h3>Powdery Mildew</h3>
+            <span class="disease-type fungal-type">Fungal Infection</span>
+          </div>
+        </div>
+        
+        <div class="disease-body">
+          <div class="disease-section">
+            <h4><i class="fas fa-microscope"></i> Description</h4>
+            <p>
+              White, powdery fungal growth caused by various species including <strong>Erysiphe</strong> 
+              and <strong>Oidium</strong>. Common in moderate temperatures with high humidity.
+            </p>
+          </div>
+
+          <div class="disease-section">
+            <h4><i class="fas fa-eye"></i> Symptoms</h4>
+            <ul class="symptom-list">
+              <li><i class="fas fa-circle"></i> White, powdery coating on leaves and stems</li>
+              <li><i class="fas fa-circle"></i> Distorted or curled leaves</li>
+              <li><i class="fas fa-circle"></i> Yellowing and premature leaf drop</li>
+              <li><i class="fas fa-circle"></i> Reduced photosynthesis and plant vigor</li>
+              <li><i class="fas fa-circle"></i> Stunted growth in severe cases</li>
+            </ul>
+          </div>
+
+          <div class="disease-section">
+            <h4><i class="fas fa-shield-alt"></i> Prevention & Treatment</h4>
+            <ul class="treatment-list">
+              <li><i class="fas fa-check-circle"></i> Provide adequate spacing for air flow</li>
+              <li><i class="fas fa-check-circle"></i> Spray with sulfur-based fungicides</li>
+              <li><i class="fas fa-check-circle"></i> Apply baking soda solution (1 tbsp/gallon water)</li>
+              <li><i class="fas fa-check-circle"></i> Use neem oil as preventive measure</li>
+              <li><i class="fas fa-check-circle"></i> Remove infected plant parts</li>
+              <li><i class="fas fa-check-circle"></i> Avoid overhead watering in evening</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== NUTRIENT DEFICIENCIES ===== -->
+<section class="deficiencies-section" id="deficiencies">
+  <div class="container">
+    <div class="section-header">
+      <h2>
+        <i class="fas fa-flask"></i>
+        Nutrient Deficiencies
+      </h2>
+      <p>Identifying and correcting nutritional disorders in Centella Asiatica</p>
+    </div>
+
+    <div class="deficiency-grid">
+      
+      <!-- Nitrogen Deficiency -->
+      <div class="deficiency-card nitrogen">
+        <div class="deficiency-header">
+          <div class="element-symbol">N</div>
+          <h3>Nitrogen Deficiency</h3>
+        </div>
+        <div class="deficiency-body">
+          <div class="deficiency-info">
+            <h4><i class="fas fa-eye"></i> Visual Symptoms</h4>
+            <ul>
+              <li>Overall yellowing (chlorosis) of older leaves first</li>
+              <li>Stunted growth and reduced plant size</li>
+              <li>Pale green to yellow-green coloration</li>
+              <li>Premature senescence of lower leaves</li>
+              <li>Reduced leaf production</li>
+            </ul>
+          </div>
+          
+          <div class="deficiency-info">
+            <h4><i class="fas fa-seedling"></i> Impact on Growth</h4>
+            <p>
+              Nitrogen is essential for protein synthesis, chlorophyll formation, and overall vegetative 
+              growth. Deficiency severely limits photosynthesis and biomass production.
+            </p>
+          </div>
+
+          <div class="deficiency-info">
+            <h4><i class="fas fa-tools"></i> Correction Methods</h4>
+            <ul>
+              <li><strong>Organic:</strong> Compost, well-rotted manure, blood meal</li>
+              <li><strong>Inorganic:</strong> Urea (46-0-0), Ammonium sulfate (21-0-0)</li>
+              <li><strong>Application:</strong> 50-100 kg N/ha depending on soil test</li>
+              <li><strong>Foliar spray:</strong> 1-2% urea solution for quick correction</li>
+              <li><strong>Timing:</strong> Split applications during active growth</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phosphorus Deficiency -->
+      <div class="deficiency-card phosphorus">
+        <div class="deficiency-header">
+          <div class="element-symbol">P</div>
+          <h3>Phosphorus Deficiency</h3>
+        </div>
+        <div class="deficiency-body">
+          <div class="deficiency-info">
+            <h4><i class="fas fa-eye"></i> Visual Symptoms</h4>
+            <ul>
+              <li>Dark green to purplish discoloration of leaves</li>
+              <li>Purple or reddish tints on leaf margins and stems</li>
+              <li>Stunted root development</li>
+              <li>Reduced tillering and branching</li>
+              <li>Delayed maturity and flowering</li>
+              <li>Necrotic spots on older leaves</li>
+            </ul>
+          </div>
+          
+          <div class="deficiency-info">
+            <h4><i class="fas fa-seedling"></i> Impact on Growth</h4>
+            <p>
+              Phosphorus is critical for energy transfer (ATP), root development, and metabolic processes. 
+              Deficiency leads to poor root systems, reducing nutrient and water uptake capacity.
+            </p>
+          </div>
+
+          <div class="deficiency-info">
+            <h4><i class="fas fa-tools"></i> Correction Methods</h4>
+            <ul>
+              <li><strong>Organic:</strong> Bone meal, rock phosphate, composted manure</li>
+              <li><strong>Inorganic:</strong> Triple superphosphate (0-46-0), DAP (18-46-0)</li>
+              <li><strong>Application:</strong> 30-60 kg P₂O₅/ha based on soil analysis</li>
+              <li><strong>Soil pH:</strong> Maintain 6.0-7.0 for optimal P availability</li>
+              <li><strong>Placement:</strong> Band application near roots for efficiency</li>
+              <li><strong>Mycorrhizae:</strong> Beneficial fungi enhance P uptake</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Potassium Deficiency -->
+      <div class="deficiency-card potassium">
+        <div class="deficiency-header">
+          <div class="element-symbol">K</div>
+          <h3>Potassium Deficiency</h3>
+        </div>
+        <div class="deficiency-body">
+          <div class="deficiency-info">
+            <h4><i class="fas fa-eye"></i> Visual Symptoms</h4>
+            <ul>
+              <li>Yellowing (chlorosis) of leaf margins and tips</li>
+              <li>Necrotic (brown, dead) edges on older leaves</li>
+              <li>Leaf scorching and curling</li>
+              <li>Weak, thin stems prone to lodging</li>
+              <li>Reduced disease resistance</li>
+              <li>Interveinal chlorosis progressing to necrosis</li>
+            </ul>
+          </div>
+          
+          <div class="deficiency-info">
+            <h4><i class="fas fa-seedling"></i> Impact on Growth</h4>
+            <p>
+              Potassium regulates water balance, enzyme activation, and stress tolerance. Deficiency 
+              weakens cell walls, reduces drought tolerance, and increases susceptibility to diseases and pests.
+            </p>
+          </div>
+
+          <div class="deficiency-info">
+            <h4><i class="fas fa-tools"></i> Correction Methods</h4>
+            <ul>
+              <li><strong>Organic:</strong> Wood ash, kelp meal, green sand</li>
+              <li><strong>Inorganic:</strong> Muriate of potash (0-0-60), Sulfate of potash (0-0-50)</li>
+              <li><strong>Application:</strong> 40-80 kg K₂O/ha depending on deficiency severity</li>
+              <li><strong>Foliar spray:</strong> 2% K₂SO₄ solution for rapid response</li>
+              <li><strong>Timing:</strong> Apply during active growth periods</li>
+              <li><strong>Soil test:</strong> Monitor K levels regularly</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Water Stress -->
+      <div class="deficiency-card water">
+        <div class="deficiency-header">
+          <div class="element-symbol">H₂O</div>
+          <h3>Water Stress</h3>
+        </div>
+        <div class="deficiency-body">
+          <div class="deficiency-info">
+            <h4><i class="fas fa-eye"></i> Visual Symptoms</h4>
+            <ul>
+              <li><strong>Drought Stress:</strong> Wilting, leaf curling, crispy brown edges</li>
+              <li>Yellowing and premature leaf drop</li>
+              <li>Reduced leaf size and slow growth</li>
+              <li><strong>Overwatering:</strong> Yellowing, soft mushy stems</li>
+              <li>Root rot symptoms (foul odor, dark roots)</li>
+              <li>Fungal diseases in waterlogged conditions</li>
+            </ul>
+          </div>
+          
+          <div class="deficiency-info">
+            <h4><i class="fas fa-seedling"></i> Impact on Growth</h4>
+            <p>
+              Centella Asiatica requires consistently moist soil. Water stress disrupts nutrient uptake, 
+              photosynthesis, and cellular functions. Both drought and waterlogging are detrimental.
+            </p>
+          </div>
+
+          <div class="deficiency-info">
+            <h4><i class="fas fa-tools"></i> Optimal Water Management</h4>
+            <ul>
+              <li><strong>Soil moisture:</strong> Maintain 50-70% field capacity</li>
+              <li><strong>Irrigation:</strong> Drip irrigation or light sprinklers preferred</li>
+              <li><strong>Frequency:</strong> Water daily or every 2 days in hot weather</li>
+              <li><strong>Drainage:</strong> Ensure proper drainage to prevent waterlogging</li>
+              <li><strong>Mulching:</strong> Apply organic mulch to retain moisture</li>
+              <li><strong>Monitoring:</strong> Use soil moisture sensors for precision</li>
+              <li><strong>Timing:</strong> Water in early morning to reduce disease risk</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Magnesium Deficiency -->
+      <div class="deficiency-card magnesium">
+        <div class="deficiency-header">
+          <div class="element-symbol">Mg</div>
+          <h3>Magnesium Deficiency</h3>
+        </div>
+        <div class="deficiency-body">
+          <div class="deficiency-info">
+            <h4><i class="fas fa-eye"></i> Visual Symptoms</h4>
+            <ul>
+              <li>Interveinal chlorosis (yellowing between veins)</li>
+              <li>Veins remain green while tissue yellows</li>
+              <li>Symptoms appear on older leaves first</li>
+              <li>Leaf margins may curl upward</li>
+              <li>Reddish-purple tints in severe cases</li>
+            </ul>
+          </div>
+
+          <div class="deficiency-info">
+            <h4><i class="fas fa-tools"></i> Correction Methods</h4>
+            <ul>
+              <li><strong>Organic:</strong> Epsom salt (MgSO₄), dolomitic lime</li>
+              <li><strong>Foliar spray:</strong> 2% Epsom salt solution</li>
+              <li><strong>Soil application:</strong> 10-20 kg Mg/ha</li>
+              <li><strong>pH adjustment:</strong> Lime application if soil is acidic</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Iron Deficiency -->
+      <div class="deficiency-card iron">
+        <div class="deficiency-header">
+          <div class="element-symbol">Fe</div>
+          <h3>Iron Deficiency</h3>
+        </div>
+        <div class="deficiency-body">
+          <div class="deficiency-info">
+            <h4><i class="fas fa-eye"></i> Visual Symptoms</h4>
+            <ul>
+              <li>Interveinal chlorosis on young leaves</li>
+              <li>New growth appears yellow or white</li>
+              <li>Veins remain green (distinct pattern)</li>
+              <li>Severe cases: complete leaf whitening</li>
+              <li>Reduced growth and vigor</li>
+            </ul>
+          </div>
+
+          <div class="deficiency-info">
+            <h4><i class="fas fa-tools"></i> Correction Methods</h4>
+            <ul>
+              <li><strong>Chelated iron:</strong> Fe-EDTA foliar spray (0.5-1%)</li>
+              <li><strong>Soil application:</strong> Iron sulfate (FeSO₄)</li>
+              <li><strong>pH management:</strong> Lower pH to 6.0-6.5 for better Fe availability</li>
+              <li><strong>Organic matter:</strong> Compost improves Fe uptake</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== AI DETECTION SECTION ===== -->
+<section class="ai-detection">
+  <div class="container">
+    <div class="detection-content">
+      <div class="detection-text">
+        <h2>
+          <i class="fas fa-brain"></i>
+          AI-Powered Disease Detection
+        </h2>
+        <p class="lead">
+          Our HelaGrow AI system uses advanced deep learning algorithms to automatically detect and 
+          classify diseases and deficiencies in Centella Asiatica plants with 98% accuracy.
+        </p>
+
+        <div class="ai-features">
+          <div class="ai-feature">
+            <div class="ai-feature-icon">
+              <i class="fas fa-camera"></i>
+            </div>
+            <div class="ai-feature-text">
+              <h4>Image-Based Detection</h4>
+              <p>Simply capture a photo of the affected plant, and our AI analyzes leaf patterns, 
+              discoloration, and symptoms in real-time.</p>
+            </div>
+          </div>
+
+          <div class="ai-feature">
+            <div class="ai-feature-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="ai-feature-text">
+              <h4>Early Warning System</h4>
+              <p>Detect issues before they become severe. IoT sensors combined with AI provide 
+              predictive insights for preventive action.</p>
+            </div>
+          </div>
+
+          <div class="ai-feature">
+            <div class="ai-feature-icon">
+              <i class="fas fa-prescription"></i>
+            </div>
+            <div class="ai-feature-text">
+              <h4>Treatment Recommendations</h4>
+              <p>Receive customized treatment plans and prevention strategies based on identified 
+              conditions and environmental data.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="detection-cta">
+          <a href="index.html#features" class="btn btn-primary">
+            <i class="fas fa-rocket"></i>
+            Try Disease Detection
+          </a>
+          <a href="iot.html" class="btn btn-secondary">
+            <i class="fas fa-chart-area"></i>
+            View IoT Dashboard
+          </a>
+        </div>
+      </div>
+
+      <div class="detection-visual">
+        <div class="detection-steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <p>Capture plant image</p>
+          </div>
+          <div class="step-arrow">
+            <i class="fas fa-arrow-down"></i>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <p>AI analyzes symptoms</p>
+          </div>
+          <div class="step-arrow">
+            <i class="fas fa-arrow-down"></i>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <p>Receive diagnosis</p>
+          </div>
+          <div class="step-arrow">
+            <i class="fas fa-arrow-down"></i>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <p>Apply treatment</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-info">
+        <h3>HelaGrow AI</h3>
+        <p>Smart Agriculture for a Sustainable Future</p>
+      </div>
+      <div class="footer-details">
+        <p>© 2026 HelaGrow AI | Designed & Developed by <strong>Sachintha Nimeshi</strong></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="about-script.js"></script>
+</body>

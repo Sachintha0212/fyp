@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IoT Monitoring | HelaGrow AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="iot-style.css">
+</head>
+
+<body class="iot-page">
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <div class="logo">
+      <i class="fas fa-leaf"></i>
+      Hela<span>Grow</span>
+    </div>
+    <div class="nav-links">
+      <a href="home.html" class="nav-link">
+        <i class="fas fa-home"></i>
+        Home
+      </a>
+      <a href="#overview" class="nav-link active">
+        <i class="fas fa-chart-line"></i>
+        Dashboard
+      </a>
+      <a href="#sensors" class="nav-link">
+        <i class="fas fa-microchip"></i>
+        Sensors
+      </a>
+      <a href="#alerts" class="nav-link">
+        <i class="fas fa-bell"></i>
+        Alerts
+      </a>
+    </div>
+    <div class="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HEADER ===== -->
+<header class="iot-header" id="overview">
+  <div class="container">
+    <div class="header-content">
+      <div class="header-text">
+        <h1>IoT Environmental Monitoring</h1>
+        <p>Real-time agricultural sensor data for Centella Asiatica cultivation</p>
+        <div class="connection-status">
+          <div class="status-indicator online">
+            <div class="status-dot"></div>
+            <span>Connected to IoT Network</span>
+          </div>
+          <div class="last-update">
+            <i class="fas fa-clock"></i>
+            <span>Last updated: <span id="lastUpdate">Just now</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-refresh" onclick="refreshData()">
+          <i class="fas fa-sync-alt"></i>
+          Refresh Data
+        </button>
+        <button class="btn btn-export" onclick="exportData()">
+          <i class="fas fa-download"></i>
+          Export Report
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== QUICK STATS ===== -->
+<section class="quick-stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card temperature">
+        <div class="stat-icon">
+          <i class="fas fa-temperature-high"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Temperature</span>
+          <h3 class="stat-value" id="currentTemp">--</h3>
+          <div class="stat-trend up">
+            <i class="fas fa-arrow-up"></i>
+            <span>+1.2°C from avg</span>
+          </div>
+        </div>
+        <div class="stat-chart">
+          <canvas id="tempMiniChart"></canvas>
+        </div>
+      </div>
+
+      <div class="stat-card humidity">
+        <div class="stat-icon">
+          <i class="fas fa-tint"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Humidity</span>
+          <h3 class="stat-value" id="currentHumidity">--</h3>
+          <div class="stat-trend neutral">
+            <i class="fas fa-minus"></i>
+            <span>Normal range</span>
+          </div>
+        </div>
+        <div class="stat-chart">
+          <canvas id="humidityMiniChart"></canvas>
+        </div>
+      </div>
+
+      <div class="stat-card soil">
+        <div class="stat-icon">
+          <i class="fas fa-seedling"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Soil Moisture</span>
+          <h3 class="stat-value" id="currentSoil">--</h3>
+          <div class="stat-trend down">
+            <i class="fas fa-arrow-down"></i>
+            <span>-5% from yesterday</span>
+          </div>
+        </div>
+        <div class="stat-chart">
+          <canvas id="soilMiniChart"></canvas>
+        </div>
+      </div>
+
+     
+</section>
+
+<!-- ===== MAIN DASHBOARD ===== -->
+<section class="dashboard-main" id="sensors">
+  <div class="container">
+    <div class="dashboard-grid">
+      
+      <!-- LEFT COLUMN - CHARTS -->
+      <div class="dashboard-left">
+        
+        <!-- Environmental Trends -->
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3>
+              <i class="fas fa-chart-line"></i>
+              Environmental Trends (24 Hours)
+            </h3>
+            <div class="card-controls">
+              <select class="timeframe-select" onchange="updateTimeframe(this.value)">
+                <option value="24h">Last 24 Hours</option>
+                <option value="7d">Last 7 Days</option>
+                <option value="30d">Last 30 Days</option>
+              </select>
+            </div>
+          </div>
+          <div class="card-body">
+            <canvas id="mainChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Soil Analysis -->
+        <div class="dashboard-card">
+          <div class="card-header">
+            <h3>
+              <i class="fas fa-layer-group"></i>
+              Soil Analysis
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="soil-metrics">
+              <div class="soil-metric">
+                <div class="metric-label">
+                  <i class="fas fa-tint"></i>
+                  Moisture Level
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" id="soilMoistureBar" style="width: 0%"></div>
+                </div>
+                <span class="metric-value" id="soilMoistureValue">0%</span>
+              </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN - DETAILS -->
+      <div class="dashboard-right">
+        
+        <!-- System Health -->
+        <div class="dashboard-card compact">
+          <div class="card-header">
+            <h3>
+              <i class="fas fa-heartbeat"></i>
+              System Health
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="health-items">
+              <div class="health-item">
+                <div class="health-status ok">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="health-info">
+                  <span class="health-name">Temperature Sensor</span>
+                  <span class="health-value">Operational</span>
+                </div>
+              </div>
+
+              <div class="health-item">
+                <div class="health-status ok">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="health-info">
+                  <span class="health-name">Humidity Sensor</span>
+                  <span class="health-value">Operational</span>
+                </div>
+              </div>
+
+              <div class="health-item">
+                <div class="health-status ok">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="health-info">
+                  <span class="health-name">Soil Moisture</span>
+                  <span class="health-value">Operational</span>
+                </div>
+              </div>
+
+              <div class="health-item">
+                <div class="health-status ok">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="health-info">
+                  <span class="health-name">WiFi Connection</span>
+                  <span class="health-value">Strong Signal</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Alerts -->
+        <div class="dashboard-card compact alerts-card" id="alerts">
+          <div class="card-header">
+            <h3>
+              <i class="fas fa-bell"></i>
+              Active Alerts
+              <span class="alert-badge">2</span>
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="alerts-list">
+              <div class="alert-item warning">
+                <div class="alert-icon">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="alert-content">
+                  <h4>Low Soil Moisture</h4>
+                  <p>Moisture level dropped to 42%. Consider irrigation.</p>
+                  <span class="alert-time">15 minutes ago</span>
+                </div>
+              </div>
+
+              <div class="alert-item info">
+                <div class="alert-icon">
+                  <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="alert-content">
+                  <h4>Optimal Growth Conditions</h4>
+                  <p>Temperature and humidity in ideal range for 6 hours.</p>
+                  <span class="alert-time">2 hours ago</span>
+                </div>
+              </div>
+            </div>
+            <button class="btn-view-all" onclick="viewAllAlerts()">
+              View All Alerts
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="dashboard-card compact">
+          <div class="card-header">
+            <h3>
+              <i class="fas fa-lightbulb"></i>
+              AI Recommendations
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="recommendations">
+              <div class="recommendation-item">
+                <i class="fas fa-tint"></i>
+                <p>Schedule irrigation within the next 3 hours for optimal moisture levels</p>
+              </div>
+              <div class="recommendation-item">
+                <i class="fas fa-cloud-sun"></i>
+                <p>Current weather conditions are ideal for growth - no action needed</p>
+              </div>
+              <div class="recommendation-item">
+                <i class="fas fa-flask"></i>
+                <p>Consider pH adjustment to reach optimal range of 6.0-7.0</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== SENSOR DETAILS ===== -->
+<section class="sensor-details">
+  <div class="container">
+    <h2 class="section-title">
+      <i class="fas fa-microchip"></i>
+      Sensor Details
+    </h2>
+    
+    <div class="sensors-grid">
+      <div class="sensor-card">
+        <div class="sensor-header">
+          <div class="sensor-icon temp">
+            <i class="fas fa-thermometer-half"></i>
+          </div>
+          <h3>Temperature Sensor</h3>
+          <span class="sensor-model">DHT11</span>
+        </div>
+        <div class="sensor-body">
+          <div class="sensor-reading">
+            <span class="reading-label">Current Reading</span>
+            <span class="reading-value" id="tempDetail">-- °C</span>
+          </div>
+          <div class="sensor-range">
+            <span>Optimal Range: 25-30°C</span>
+          </div>
+          <div class="sensor-stats">
+            <div class="stat">
+              <span>Min (24h)</span>
+              <strong id="tempMin">--</strong>
+            </div>
+            <div class="stat">
+              <span>Max (24h)</span>
+              <strong id="tempMax">--</strong>
+            </div>
+            <div class="stat">
+              <span>Average</span>
+              <strong id="tempAvg">--</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sensor-card">
+        <div class="sensor-header">
+          <div class="sensor-icon humidity">
+            <i class="fas fa-water"></i>
+          </div>
+          <h3>Humidity Sensor</h3>
+          <span class="sensor-model">DHT11</span>
+        </div>
+        <div class="sensor-body">
+          <div class="sensor-reading">
+            <span class="reading-label">Current Reading</span>
+            <span class="reading-value" id="humidityDetail">-- %</span>
+          </div>
+          <div class="sensor-range">
+            <span>Optimal Range: 60-80%</span>
+          </div>
+          <div class="sensor-stats">
+            <div class="stat">
+              <span>Min (24h)</span>
+              <strong id="humidityMin">--</strong>
+            </div>
+            <div class="stat">
+              <span>Max (24h)</span>
+              <strong id="humidityMax">--</strong>
+            </div>
+            <div class="stat">
+              <span>Average</span>
+              <strong id="humidityAvg">--</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sensor-card">
+        <div class="sensor-header">
+          <div class="sensor-icon soil">
+            <i class="fas fa-seedling"></i>
+          </div>
+          <h3>Soil Moisture</h3>
+          <span class="sensor-model">Capacitive</span>
+        </div>
+        <div class="sensor-body">
+          <div class="sensor-reading">
+            <span class="reading-label">Current Reading</span>
+            <span class="reading-value" id="soilDetail">-- %</span>
+          </div>
+          <div class="sensor-range">
+            <span>Optimal Range: 50-70%</span>
+          </div>
+          <div class="sensor-stats">
+            <div class="stat">
+              <span>Min (24h)</span>
+              <strong id="soilMin">--</strong>
+            </div>
+            <div class="stat">
+              <span>Max (24h)</span>
+              <strong id="soilMax">--</strong>
+            </div>
+            <div class="stat">
+              <span>Average</span>
+              <strong id="soilAvg">--</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-info">
+        <h3>HelaGrow AI</h3>
+        <p>IoT Environmental Monitoring System</p>
+      </div>
+      <div class="footer-details">
+        <p>© 2026 HelaGrow AI | Designed & Developed by <strong>Sachintha Nimeshi</strong></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="iot-script.js"></script>
+</body>
+</html>

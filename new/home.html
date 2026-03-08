@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HelaGrow AI | Smart Agriculture System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <div class="logo">
+      <i class="fas fa-leaf"></i>
+      Hela<span>Grow</span>
+    </div>
+    <div class="nav-links">
+      <a href="#home" class="nav-link active">
+        <i class="fas fa-home"></i>
+        Home
+      </a>
+      <a href="#features" class="nav-link">
+        <i class="fas fa-cogs"></i>
+        Features
+      </a>
+      <a href="#about" class="nav-link">
+        <i class="fas fa-info-circle"></i>
+        About
+      </a>
+      <a href="#disease" class="nav-link">
+        <i class="fas fa-info-circle"></i>
+        Disease Detection Info
+      </a>
+      <a href="iot.html" class="btn-nav">
+        <i class="fas fa-satellite-dish"></i>
+        Launch IoT
+      </a>
+      
+    </div>
+    <div class="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="container">
+    <div class="hero-inner">
+      
+      <!-- LEFT CONTENT -->
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="fas fa-graduation-cap"></i>
+          <span>Final Year Project</span>
+        </div>
+
+        <h1 class="hero-title">
+          AI & IoT Based <br>
+          <span class="highlight">Smart Agriculture</span> System
+        </h1>
+
+        <p class="hero-description">
+          A cutting-edge solution for monitoring <strong>Centella Asiatica</strong> crops 
+          using advanced Artificial Intelligence and Internet of Things technologies 
+          for optimal growth and disease prevention.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#features" class="btn btn-primary">
+            <i class="fas fa-rocket"></i>
+            Explore System
+          </a>
+          <a href="iot.html" class="btn btn-secondary">
+            <i class="fas fa-chart-line"></i>
+            IoT Module
+          </a>
+            <a href="disease.html" class="nav-link">
+            <i class="fas fa-info-circle"></i>
+                Disease Detection Info
+            </a>
+          
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <h3>98%</h3>
+            <p>Accuracy</p>
+          </div>
+          <div class="stat">
+            <h3>24/7</h3>
+            <p>Monitoring</p>
+          </div>
+          <div class="stat">
+            <h3>Real-time</h3>
+            <p>Analytics</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT VISUAL (CUTE SCANNING LOGO STAYS HERE) -->
+      <div class="hero-visual">
+        <div class="scanner-container">
+          <div class="scanner-circle">
+            <div class="scanner-icon">
+              <i class="fas fa-seedling"></i>
+            </div>
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring delay-1"></div>
+            <div class="pulse-ring delay-2"></div>
+          </div>
+          <div class="status-indicator">
+            <div class="status-dot"></div>
+            <span>System Status: <strong>Online</strong></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== QUICK ACTIONS (MOVED HERE - AFTER HERO SECTION) ===== -->
+<section class="quick-actions">
+  <div class="container">
+    <div class="actions-grid">
+      
+      <div class="action-card camera-card">
+        <div class="action-icon">
+          <i class="fas fa-camera"></i>
+        </div>
+        <h3>Scan Plant Disease</h3>
+        <p>Take a photo to instantly detect plant diseases using AI</p>
+        <button class="btn btn-camera" onclick="openCamera()">
+          <i class="fas fa-camera"></i>
+          Open Camera
+        </button>
+        <div class="camera-preview" id="cameraPreview" style="display: none;">
+          <video id="video" autoplay playsinline></video>
+          <canvas id="canvas" style="display: none;"></canvas>
+          <div class="camera-controls">
+            <button class="btn-round capture" onclick="captureImage()">
+              <i class="fas fa-circle"></i>
+            </button>
+            <button class="btn-round close" onclick="closeCamera()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <div class="captured-image" id="capturedImage" style="display: none;">
+          <img id="capturedImg" alt="Captured plant image">
+          <div class="analysis-result">
+            <div class="analyzing" id="analyzing">
+              <i class="fas fa-spinner fa-spin"></i>
+              Analyzing image...
+            </div>
+            <div class="result" id="result" style="display: none;">
+              <h4>Analysis Complete</h4>
+              <p id="resultText">Plant appears healthy!</p>
+              <div class="confidence">
+                Confidence: <span id="confidence">95%</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-small" onclick="retakePhoto()">
+            <i class="fas fa-redo"></i>
+            Retake Photo
+          </button>
+        </div>
+      </div>
+
+      <div class="action-card">
+        <div class="action-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>View Analytics</h3>
+        <p>Check real-time data and growth insights</p>
+        <a href="iot.html" class="btn btn-outline">
+          <i class="fas fa-external-link-alt"></i>
+          View Dashboard
+        </a>
+      </div>
+
+      <div class="action-card">
+        <div class="action-icon">
+          <i class="fas fa-bell"></i>
+        </div>
+        <h3>Alerts & Notifications</h3>
+        <p>Stay updated with important plant health alerts</p>
+        <button class="btn btn-outline" onclick="showNotifications()">
+          <i class="fas fa-bell"></i>
+          View Alerts
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Powerful Features</h2>
+      <p class="section-subtitle">Advanced technology for modern agriculture</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-brain"></i>
+        </div>
+        <h3>AI Disease Detection</h3>
+        <p>Advanced deep learning algorithms detect plant diseases early with 98% accuracy using computer vision technology.</p>
+        <div class="feature-tech">
+          <span>TensorFlow</span>
+          <span>OpenCV</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-wifi"></i>
+        </div>
+        <h3>IoT Environmental Monitoring</h3>
+        <p>Real-time monitoring of temperature, humidity, soil moisture, and light intensity with wireless sensor networks.</p>
+        <div class="feature-tech">
+          <span>ESP32</span>
+          <span>Sensors</span>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-chart-area"></i>
+        </div>
+        <h3>Data Analytics Dashboard</h3>
+        <p>Comprehensive data visualization and predictive analytics to optimize crop yield and reduce losses.</p>
+        <div class="feature-tech">
+          <span>React</span>
+          <span>D3.js</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-content">
+      <div class="about-text">
+        <h2>System Overview</h2>
+        <p>
+          Our intelligent agriculture system combines the power of Artificial Intelligence 
+          and Internet of Things to revolutionize crop monitoring and management. 
+          Specifically designed for <strong>Centella Asiatica</strong> cultivation, 
+          this system provides unprecedented insights into plant health and environmental conditions.
+        </p>
+        <div class="about-features">
+          <div class="about-feature">
+            <i class="fas fa-check-circle"></i>
+            <span>Early disease detection and prevention</span>
+          </div>
+          <div class="about-feature">
+            <i class="fas fa-check-circle"></i>
+            <span>Optimized resource utilization</span>
+          </div>
+          <div class="about-feature">
+            <i class="fas fa-check-circle"></i>
+            <span>Increased crop yield and quality</span>
+          </div>
+          <div class="about-feature">
+            <i class="fas fa-check-circle"></i>
+            <span>Reduced environmental impact</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="about-visual">
+        <div class="tech-stack">
+          <div class="tech-item">
+            <i class="fab fa-python"></i>
+            <span>Python</span>
+          </div>
+          <div class="tech-item">
+            <i class="fas fa-microchip"></i>
+            <span>IoT</span>
+          </div>
+          <div class="tech-item">
+            <i class="fas fa-robot"></i>
+            <span>AI/ML</span>
+          </div>
+          <div class="tech-item">
+            <i class="fab fa-react"></i>
+            <span>React</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-info">
+        <h3>HelaGrow AI</h3>
+        <p>Smart Agriculture for a Sustainable Future</p>
+      </div>
+      <div class="footer-details">
+        <p>© 2026 HelaGrow AI | Designed & Developed by <strong>Sachintha Nimeshi</strong></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
