@@ -17,3 +17,8 @@ window.addEventListener('load', () => {
     }, i * 200);
   });
 });
+
+
+
+
+
