@@ -1,9 +1,2 @@
 {
-    "python-envs.pythonProjects": [
-        {
-            "path": "ml/ml.py",
-            "envManager": "ms-python.python:venv",
-            "packageManager": "ms-python.python:pip"
-        }
-    ]
 }
