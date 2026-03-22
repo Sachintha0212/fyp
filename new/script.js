@@ -598,3 +598,41 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+async function analyzeImage() {
+  const canvas = document.getElementById('canvas');
+  const imageBase64 = canvas.toDataURL('image/jpeg');
+
+  document.getElementById('analyzing').style.display = 'flex';
+  document.getElementById('result').style.display = 'none';
+
+  try {
+    const response = await fetch('http://127.0.0.1:5000/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: imageBase64 })
+    });
+
+    const data = await response.json();
+
+    document.getElementById('analyzing').style.display = 'none';
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('resultText').textContent = data.disease;
+    document.getElementById('confidence').textContent = data.confidence + '%';
+
+  } catch (error) {
+    document.getElementById('analyzing').style.display = 'none';
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('resultText').textContent = 'Cannot connect to AI server. Make sure app.py is running.';
+    document.getElementById('confidence').textContent = '—';
+  }
+}
+```
+
+---
+
+## Test it right now
+
+Open your browser and go to:
+```
+http://127.0.0.1:5000/predict
