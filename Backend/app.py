@@ -92,7 +92,6 @@ def predict():
     if not data or "image" not in data:
         return jsonify({"error": "Missing 'image' field in JSON body"}), 400
 
-    # ── Decode image ─────────────────────────────────────────────────────────
     try:
         img = decode_base64_image(data["image"])
     except Exception as exc:
