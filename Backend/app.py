@@ -98,7 +98,6 @@ def predict():
         log.warning("Image decode failed: %s", exc)
         return jsonify({"error": f"Could not decode image: {exc}"}), 400
 
-    # ── Run inference ────────────────────────────────────────────────────────
     try:
         model = get_model()
         tensor = preprocess(img)
