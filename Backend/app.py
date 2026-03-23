@@ -23,9 +23,6 @@ CLASS_NAMES = [
     "Pest Damage",
 ]
 
-# ─────────────────────────────────────────────────────────────────────────────
-# App setup
-# ─────────────────────────────────────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 log = logging.getLogger("helagrow")
 
