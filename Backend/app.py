@@ -61,9 +61,6 @@ def preprocess(img: Image.Image) -> np.ndarray:
     return np.expand_dims(arr, axis=0)   # shape (1, 224, 224, 3)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Routes — Frontend
-# ─────────────────────────────────────────────────────────────────────────────
 @app.route("/")
 def index():
     return send_from_directory(STATIC_DIR, "home.html")
