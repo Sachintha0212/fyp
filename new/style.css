@@ -1,14 +1,8 @@
-/* ═══════════════════════════════════════════════════════════
-   HELAGROW AI — UNIFIED DESIGN SYSTEM
-   Aesthetic: Dark Biotech Premium × Organic Tech
-   Fonts: Syne (display) + DM Sans (body)
-═══════════════════════════════════════════════════════════ */
+
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-/* ── TOKENS ──────────────────────────────────────────────── */
 :root {
-  /* Palette */
   --ink:          #050b08;
   --ink-2:        #0b1410;
   --ink-3:        #101c14;
@@ -36,7 +30,6 @@
   --text-2: #9db5a3;
   --text-3: #5c7a63;
 
-  /* Typography */
   --font-head: 'Outfit', sans-serif;
   --font-body: 'Space Grotesk', sans-serif;
 
@@ -51,7 +44,7 @@
   --ease: cubic-bezier(0.16,1,0.3,1);
 }
 
-/* ── RESET ───────────────────────────────────────────────── */
+/*RESET */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
 body {
@@ -66,7 +59,7 @@ img, video { max-width: 100%; display: block; }
 a { text-decoration: none; color: inherit; }
 ul { list-style: none; }
 
-/* ── GRAIN OVERLAY ───────────────────────────────────────── */
+/* GRAIN OVERLAY */
 body::before {
   content: '';
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -75,14 +68,14 @@ body::before {
   background-size: 200px;
 }
 
-/* ── LAYOUT ──────────────────────────────────────────────── */
+/* LAYOUT */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 clamp(16px, 4vw, 40px);
 }
 
-/* ── NAVBAR ──────────────────────────────────────────────── */
+/*NAVBAR  */
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 900;
   background: rgba(5,11,8,0.75);

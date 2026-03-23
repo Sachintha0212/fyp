@@ -1,12 +1,6 @@
-/* ═══════════════════════════════════════════════════════════
-   HELAGROW AI — UNIFIED SCRIPT
-   Handles: navbar, scroll reveal, camera, AI analysis,
-            notifications, IoT refresh, animations
-═══════════════════════════════════════════════════════════ */
-
 'use strict';
 
-/* ── NAVBAR ─────────────────────────────────────────────── */
+/* NAVBAR  */
 const navbar    = document.getElementById('navbar');
 const menuBtn   = document.getElementById('menuBtn');
 const navLinks  = document.getElementById('navLinks');
