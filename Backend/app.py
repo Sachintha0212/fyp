@@ -88,7 +88,6 @@ def predict():
           "all_predictions": { "Normal / Healthy": 97.3, "Fungal Disease": 1.8, ... }
         }
     """
-    # ── Parse request ────────────────────────────────────────────────────────
     data = request.get_json(force=True, silent=True)
     if not data or "image" not in data:
         return jsonify({"error": "Missing 'image' field in JSON body"}), 400
