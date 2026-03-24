@@ -1,2 +1,9 @@
 {
+  "python.analysis.exclude": [
+    "**/.venv",
+    "**/site-packages"
+  ],
+  "files.exclude": {
+    "**/.venv": true
+  }
 }
