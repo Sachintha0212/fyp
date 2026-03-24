@@ -426,7 +426,7 @@ body::before {
 .camera-main { grid-row: span 1; }
 
 .camera-preview { margin-top: 16px; border-radius: var(--r-md); overflow: hidden; position: relative; }
-.camera-preview video { width: 100%; border-radius: var(--r-md); }
+.camera-preview video { width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--r-md); }
 .camera-controls {
   position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
   display: flex; gap: 12px;

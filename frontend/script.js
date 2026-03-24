@@ -126,7 +126,10 @@ async function openCamera() {
     }
 
     video.srcObject = stream;
-    await video.play();
+    video.onloadedmetadata = () => {
+      console.log('Video metadata loaded, starting playback');
+      video.play().catch(err => console.error('Play error:', err));
+    };
     preview.style.display = 'block';
     if (btn) btn.style.display = 'none';
 
