@@ -118,9 +118,15 @@
         <div class="action-icon"><i class="fas fa-camera"></i></div>
         <h3>Scan Plant Disease</h3>
         <p>Capture a photo and get instant AI-powered diagnosis for your Centella Asiatica crop.</p>
-        <button class="btn btn-primary" onclick="openCamera()" id="openCamBtn">
-          <i class="fas fa-camera"></i> Open Camera
-        </button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="openCamera()" id="openCamBtn">
+            <i class="fas fa-camera"></i> Open Camera
+          </button>
+          <label class="btn btn-outline" style="cursor:pointer;">
+            <i class="fas fa-upload"></i> Upload Image
+            <input type="file" accept="image/*" style="display:none;" onchange="handleFileUpload(this)">
+          </label>
+        </div>
 
         <!-- Camera Preview -->
         <div class="camera-preview" id="cameraPreview" style="display:none;">
@@ -164,46 +170,6 @@
         <a href="iot.html" class="btn btn-outline">
           <i class="fas fa-external-link-alt"></i> Open Dashboard
         </a>
-      </div>
-
-      <!-- Alerts -->
-      <div class="action-card reveal">
-        <div class="action-icon"><i class="fas fa-bell"></i></div>
-        <h3>Smart Alerts</h3>
-        <p>System-generated notifications based on sensor thresholds and AI detections.</p>
-        <button class="btn btn-outline" onclick="toggleNotifs()">
-          <i class="fas fa-bell"></i> View Alerts
-        </button>
-        <div class="notif-panel" id="notifPanel">
-          <div class="notif-item">
-            <div class="notif-dot warn"></div>
-            <div class="notif-text">
-              <p>Humidity below optimal range</p>
-              <div class="notif-time">5 minutes ago</div>
-            </div>
-          </div>
-          <div class="notif-item">
-            <div class="notif-dot ok"></div>
-            <div class="notif-text">
-              <p>Temperature within normal bounds</p>
-              <div class="notif-time">12 minutes ago</div>
-            </div>
-          </div>
-          <div class="notif-item">
-            <div class="notif-dot err"></div>
-            <div class="notif-text">
-              <p>Soil moisture critically low</p>
-              <div class="notif-time">28 minutes ago</div>
-            </div>
-          </div>
-          <div class="notif-item">
-            <div class="notif-dot ok"></div>
-            <div class="notif-text">
-              <p>AI scan: No disease detected</p>
-              <div class="notif-time">1 hour ago</div>
-            </div>
-          </div>
-        </div>
       </div>
 
     </div>

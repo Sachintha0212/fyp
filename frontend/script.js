@@ -94,6 +94,7 @@ window.addEventListener('load', () => {
 let stream = null;
 
 async function openCamera() {
+  console.log('openCamera called');
   const preview  = document.getElementById('cameraPreview');
   const video    = document.getElementById('video');
   const btn      = document.getElementById('openCamBtn');
@@ -192,6 +193,7 @@ function hideCameraError() {
 }
 
 function handleFileUpload(input) {
+  console.log('handleFileUpload called');
   const file = input.files[0];
   if (!file) return;
   const reader = new FileReader();
@@ -260,9 +262,15 @@ function closeStream() {
 }
 
 /* ── AI DISEASE ANALYSIS ─────────────────────────────────── */
-const AI_SERVER = 'http://127.0.0.1:5000';
+const API_SERVER = (() => {
+  if (location.protocol.startsWith('http')) {
+    return `${location.protocol}//${location.hostname}:5000`;
+  }
+  return 'http://127.0.0.1:5000';
+})();
 
 async function analyzeImage() {
+  console.log('analyzeImage called');
   const canvas     = document.getElementById('canvas');
   const analyzing  = document.getElementById('analyzing');
   const result     = document.getElementById('result');
@@ -275,7 +283,7 @@ async function analyzeImage() {
   if (result)    { result.style.display = 'none'; }
 
   try {
-    const response = await fetch(`${AI_SERVER}/predict`, {
+    const response = await fetch(`${API_SERVER}/predict`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: imageBase64 })
@@ -300,6 +308,7 @@ async function analyzeImage() {
 
     // Show all-predictions breakdown if available
     showAllPredictions(data.all_predictions);
+    showIotContext(data.iot);
 
   } catch (err) {
     if (analyzing) analyzing.style.display = 'none';
@@ -314,6 +323,29 @@ async function analyzeImage() {
     }
     if (confidence) confidence.textContent = '—';
   }
+}
+
+function showIotContext(iot) {
+  const result = document.getElementById('result');
+  if (!result || !iot) return;
+
+  let box = document.getElementById('iotContext');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'iotContext';
+    box.style.cssText = 'margin-top:10px;font-size:0.74rem;color:var(--text-3);line-height:1.5;';
+    result.appendChild(box);
+  }
+
+  if (!iot.connected || !iot.latest) {
+    box.textContent = 'IoT link: no recent sensor data from backend.';
+    return;
+  }
+
+  const t = iot.latest.temperature;
+  const h = iot.latest.humidity;
+  const s = iot.latest.soil_moisture;
+  box.textContent = `IoT link: Temp ${t ?? '--'} C, Humidity ${h ?? '--'}%, Soil ${s ?? '--'}%.`;
 }
 
 function showAllPredictions(preds) {
@@ -338,6 +370,90 @@ function showAllPredictions(preds) {
         <div style="width:36px;text-align:right;">${pct}%</div>
       </div>`)
     .join('');
+}
+
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
+function setNumeric(id, value, suffix = '') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (value == null || Number.isNaN(value)) {
+    el.textContent = '--';
+    return;
+  }
+  el.textContent = `${Number(value).toFixed(1)}${suffix}`;
+}
+
+function updateIotConnection(connected) {
+  const badge = document.getElementById('iotConnectionBadge');
+  if (!badge) return;
+  badge.innerHTML = connected
+    ? '<i class="fas fa-circle"></i> Backend Connected'
+    : '<i class="fas fa-circle"></i> Waiting for ESP32';
+  badge.classList.toggle('live', connected);
+}
+
+function renderIotAlerts(alerts) {
+  const box = document.getElementById('iotAlerts');
+  if (!box) return;
+  if (!Array.isArray(alerts) || alerts.length === 0) {
+    box.innerHTML = '<div class="notif-item"><div class="notif-text"><p>No alerts yet</p></div></div>';
+    return;
+  }
+
+  box.innerHTML = alerts.map((item) => {
+    const dotClass = item.severity === 'critical'
+      ? 'err'
+      : item.severity === 'warn'
+        ? 'warn'
+        : 'ok';
+    return `
+      <div class="notif-item">
+        <div class="notif-dot ${dotClass}"></div>
+        <div class="notif-text">
+          <p>${item.message}</p>
+          <div class="notif-time">${item.type}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function refreshIotData() {
+  const loading = document.getElementById('iotLoading');
+  if (loading) loading.style.display = 'block';
+
+  try {
+    const response = await fetch(`${API_SERVER}/iot/data`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+
+    setNumeric('tempValue', data.temperature, ' C');
+    setNumeric('humidityValue', data.humidity, '%');
+    setNumeric('soilValue', data.soil_moisture, '%');
+    setNumeric('lightValue', data.light, '%');
+    setText('deviceId', data.device_id || '--');
+    setText('cameraIp', data.camera_url || '--');
+    setText('lastSensorUpdate', data.updated_at ? new Date(data.updated_at).toLocaleString() : '--');
+
+    updateIotConnection(Boolean(data.connected));
+    renderIotAlerts(data.alerts);
+
+    const frame = document.getElementById('cameraFrame');
+    if (frame && data.camera_url && frame.src !== data.camera_url) {
+      frame.src = data.camera_url;
+    }
+    const openCameraBtn = document.getElementById('openCameraBtn');
+    if (openCameraBtn && data.camera_url) openCameraBtn.href = data.camera_url;
+    const fullResolutionBtn = document.getElementById('fullResolutionBtn');
+    if (fullResolutionBtn && data.camera_url) fullResolutionBtn.href = data.camera_url;
+  } catch (err) {
+    updateIotConnection(false);
+  } finally {
+    if (loading) loading.style.display = 'none';
+  }
 }
 
 /* ── NOTIFICATIONS TOGGLE ────────────────────────────────── */
@@ -369,6 +485,7 @@ function refreshCamera() {
     setTimeout(() => { frame.src = src; }, 300);
   }
   updateTimestamp();
+  refreshIotData();
 }
 
 function updateTimestamp() {
@@ -383,6 +500,10 @@ function updateTimestamp() {
 document.addEventListener('DOMContentLoaded', () => {
   updateTimestamp();
   setInterval(updateTimestamp, 1000);
+  if (document.body.classList.contains('iot-page')) {
+    refreshIotData();
+    setInterval(refreshIotData, 5000);
+  }
   console.log('🌱 HelaGrow AI — system initialized');
 });
 

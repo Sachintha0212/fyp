@@ -36,15 +36,15 @@
         <h1>IoT Live Dashboard</h1>
         <p>ESP32 sensor network — environmental telemetry for your Centella Asiatica crop</p>
         <div class="header-badges">
-          <div class="hbadge live">
-            <i class="fas fa-circle"></i> Camera Feed Live
+          <div class="hbadge" id="iotConnectionBadge">
+            <i class="fas fa-circle"></i> Waiting for ESP32
           </div>
           <div class="hbadge">
             <i class="fas fa-clock"></i>
             Last refreshed: <span id="lastUpdate" style="margin-left:4px;font-weight:600;color:var(--text-1);">—</span>
           </div>
           <div class="hbadge">
-            <i class="fas fa-microchip"></i> IP: 192.168.8.105
+            <i class="fas fa-microchip"></i> Device: <span id="deviceId" style="margin-left:4px;font-weight:600;color:var(--text-1);">--</span>
           </div>
         </div>
       </div>
@@ -53,7 +53,7 @@
         <button class="btn btn-secondary" onclick="refreshCamera()">
           <i class="fas fa-sync-alt"></i> Refresh Feed
         </button>
-        <a class="btn btn-primary" href="http://192.168.8.105" target="_blank">
+        <a class="btn btn-primary" href="#" target="_blank" id="openCameraBtn">
           <i class="fas fa-up-right-from-square"></i> Open Camera
         </a>
       </div>
@@ -69,25 +69,28 @@
     <div class="cam-card reveal">
       <div class="cam-card-head">
         <h3><i class="fas fa-video"></i> ESP32-CAM Live Feed</h3>
-        <span class="cam-ip">http://192.168.8.105</span>
+        <span class="cam-ip" id="cameraIp">--</span>
       </div>
       <div class="cam-body">
         <iframe
           id="cameraFrame"
           class="cam-frame"
-          src="http://192.168.8.105"
+          src="about:blank"
           title="ESP32-CAM Live Feed">
         </iframe>
 
         <p class="cam-note">
           <i class="fas fa-info-circle" style="color:var(--green);margin-right:6px;"></i>
           Live stream from the ESP32-CAM module mounted over the crop bed.
-          Ensure your device is on the same local network as the camera module (192.168.8.105).
+          Ensure your device is on the same local network as the camera module.
           Use the <strong>Open Camera</strong> button to view the full-resolution stream in a new tab.
         </p>
+        <div id="iotLoading" style="display:none;color:var(--text-3);font-size:0.8rem;margin:8px 0 0;">
+          <i class="fas fa-spinner fa-spin"></i> Fetching live telemetry...
+        </div>
 
         <div class="cam-actions">
-          <a class="btn btn-primary" href="http://192.168.8.105" target="_blank">
+          <a class="btn btn-primary" href="#" target="_blank" id="fullResolutionBtn">
             <i class="fas fa-camera"></i> Full Resolution Feed
           </a>
           <button class="btn btn-secondary" onclick="refreshCamera()">
@@ -104,24 +107,54 @@
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;" class="reveal">
       <div class="cam-card" style="padding:20px 24px;">
         <div style="font-size:0.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;">
-          <i class="fas fa-microchip" style="color:var(--green);margin-right:6px;"></i>Module
+          <i class="fas fa-temperature-half" style="color:var(--green);margin-right:6px;"></i>Temperature
         </div>
-        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;">ESP32-CAM</div>
-        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">OV2640 Image Sensor, WiFi 802.11 b/g/n</div>
+        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;" id="tempValue">--</div>
+        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Target: 20 - 30 C</div>
       </div>
       <div class="cam-card" style="padding:20px 24px;">
         <div style="font-size:0.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;">
-          <i class="fas fa-network-wired" style="color:var(--green);margin-right:6px;"></i>Network
+          <i class="fas fa-droplet" style="color:var(--green);margin-right:6px;"></i>Humidity
         </div>
-        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;">Local LAN</div>
-        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Static IP: 192.168.8.105 · Port 80</div>
+        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;" id="humidityValue">--</div>
+        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Target: 60 - 80 %</div>
       </div>
       <div class="cam-card" style="padding:20px 24px;">
         <div style="font-size:0.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;">
-          <i class="fas fa-video" style="color:var(--green);margin-right:6px;"></i>Stream
+          <i class="fas fa-water" style="color:var(--green);margin-right:6px;"></i>Soil Moisture
         </div>
-        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;">MJPEG Stream</div>
-        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Up to 10fps · 1600×1200 max resolution</div>
+        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;" id="soilValue">--</div>
+        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Irrigation threshold: 35 %</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px;" class="reveal">
+      <div class="cam-card" style="padding:20px 24px;">
+        <div style="font-size:0.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;">
+          <i class="fas fa-sun" style="color:var(--green);margin-right:6px;"></i>Light Intensity
+        </div>
+        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;" id="lightValue">--</div>
+        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Low light may slow growth</div>
+      </div>
+      <div class="cam-card" style="padding:20px 24px;">
+        <div style="font-size:0.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;">
+          <i class="fas fa-clock" style="color:var(--green);margin-right:6px;"></i>Last Sensor Update
+        </div>
+        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;" id="lastSensorUpdate">--</div>
+        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Telemetry received by backend API</div>
+      </div>
+    </div>
+
+    <div class="cam-card reveal" style="padding:20px 24px;margin-top:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;">
+        <h3 style="font-size:1rem;"><i class="fas fa-bell"></i> Sensor Alerts</h3>
+      </div>
+      <div class="notif-panel" id="iotAlerts" style="display:block;">
+        <div class="notif-item">
+          <div class="notif-text">
+            <p>Waiting for live alert data...</p>
+          </div>
+        </div>
       </div>
     </div>
 
