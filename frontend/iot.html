@@ -2,206 +2,435 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>IoT Monitor | HelaGrow AI</title>
+  <title>Camera Access | HelaGrow AI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+    :root {
+      --ink:#050b08;--ink-2:#0b1410;--ink-3:#101c14;
+      --card:rgba(255,255,255,0.04);--card-hover:rgba(255,255,255,0.07);
+      --border:rgba(255,255,255,0.07);--border-glow:rgba(16,212,102,0.28);
+      --green:#10d466;--green-dim:#0aaf50;--green-pale:rgba(16,212,102,0.08);--green-glow:rgba(16,212,102,0.35);
+      --rose:#ff5b6e;--rose-pale:rgba(255,91,110,0.10);
+      --sky:#45c0f7;--sky-pale:rgba(69,192,247,0.10);
+      --amber:#f7c245;--amber-pale:rgba(247,194,69,0.10);
+      --text-1:#f0f5f1;--text-2:#9db5a3;--text-3:#5c7a63;
+      --font-head:'Outfit',sans-serif;--font-body:'Space Grotesk',sans-serif;
+      --r-sm:8px;--r-md:14px;--r-lg:20px;--r-xl:28px;--r-2xl:40px;
+      --ease:cubic-bezier(0.16,1,0.3,1);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--font-body);background:var(--ink);color:var(--text-1);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh;}
+    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-size:200px;}
+    a{text-decoration:none;color:inherit;}
+    img,video{max-width:100%;display:block;}
+
+    /* ── NAVBAR ── */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(5,11,8,.75);backdrop-filter:blur(28px) saturate(1.6);border-bottom:1px solid var(--border);transition:box-shadow .3s var(--ease);}
+    .navbar.scrolled{box-shadow:0 4px 40px rgba(0,0,0,.55);}
+    .navbar-inner{display:flex;align-items:center;justify-content:space-between;height:72px;padding:0 clamp(20px,4vw,48px);max-width:1280px;margin:0 auto;}
+    .logo{display:flex;align-items:center;gap:9px;font-family:var(--font-head);font-weight:800;font-size:1.35rem;letter-spacing:-.02em;color:var(--text-1);}
+    .logo i{color:var(--green);font-size:1.3rem;}.logo span{color:var(--green);}
+    .nav-links{display:flex;align-items:center;gap:2px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:50px;padding:5px 6px;}
+    .nav-link{display:flex;align-items:center;gap:7px;padding:8px 18px;border-radius:50px;font-family:var(--font-body);font-size:.875rem;font-weight:500;color:var(--text-2);transition:all .22s var(--ease);white-space:nowrap;}
+    .nav-link i{font-size:.8rem;}
+    .nav-link:hover{color:var(--text-1);background:rgba(255,255,255,.07);}
+    .nav-link.active{color:var(--text-1);background:rgba(255,255,255,.11);font-weight:600;position:relative;}
+    .nav-link.active::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:50%;height:2px;background:var(--green);border-radius:2px;}
+    .btn-nav{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:var(--ink);padding:10px 22px;border-radius:50px;margin-left:14px;font-family:var(--font-head);font-size:.875rem;font-weight:700;box-shadow:0 0 22px var(--green-glow);transition:all .25s var(--ease);}
+    .btn-nav:hover{transform:translateY(-2px);box-shadow:0 6px 30px var(--green-glow);background:#14f070;}
+    .mobile-menu-btn{display:none;cursor:pointer;color:var(--text-1);font-size:1.3rem;padding:6px;background:none;border:none;}
+
+    /* ── BUTTONS ── */
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:var(--r-2xl);font-family:var(--font-head);font-size:.875rem;font-weight:700;letter-spacing:.01em;cursor:pointer;border:none;transition:all .25s var(--ease);}
+    .btn-primary{background:var(--green);color:var(--ink);box-shadow:0 0 24px rgba(16,212,102,.4);}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 32px rgba(16,212,102,.55);}
+    .btn-secondary{background:transparent;color:var(--green);border:1.5px solid var(--border-glow);}
+    .btn-secondary:hover{background:var(--green-pale);transform:translateY(-2px);}
+    .btn-danger{background:var(--rose);color:#fff;box-shadow:0 0 20px var(--rose-pale);}
+    .btn-danger:hover{transform:translateY(-2px);opacity:.9;}
+    .btn-outline{background:transparent;color:var(--text-2);border:1px solid var(--border);}
+    .btn-outline:hover{color:var(--text-1);border-color:var(--border-glow);background:var(--card);}
+    .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+
+    /* ── LAYOUT ── */
+    .container{max-width:1140px;margin:0 auto;padding:0 clamp(16px,4vw,40px);}
+    .section-tag{display:inline-flex;align-items:center;gap:8px;color:var(--green);font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--green-pale);border:1px solid var(--border-glow);padding:5px 14px;border-radius:var(--r-2xl);margin-bottom:16px;}
+    .section-title .accent{color:var(--green);}
+
+    /* ── HEADER ── */
+    .cam-header{padding:100px 0 48px;background:radial-gradient(ellipse 100% 60% at 50% 0%,rgba(16,212,102,.07),transparent);border-bottom:1px solid var(--border);}
+    .cam-header-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px;}
+    .cam-header h1{font-family:var(--font-head);font-size:clamp(1.6rem,4vw,2.6rem);font-weight:800;letter-spacing:-.04em;margin-bottom:8px;}
+    .cam-header p{font-size:.9rem;color:var(--text-2);margin-bottom:16px;}
+    .header-badges{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+    .hbadge{display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--border);padding:6px 14px;border-radius:var(--r-2xl);font-size:.78rem;color:var(--text-2);}
+    .hbadge.live i{color:var(--green);animation:blink 1.2s ease-in-out infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+    /* ── PAGE GRID ── */
+    .main-section{padding:60px 0 80px;}
+    .page-grid{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;}
+
+    /* ── CARD ── */
+    .cam-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;}
+    .cam-card-head{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);}
+    .cam-card-head h3{font-family:var(--font-head);font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:9px;}
+    .cam-card-head h3 i{color:var(--green);}
+    .cam-body{padding:24px;}
+
+    /* ── STATUS DOT ── */
+    .status-dot{width:8px;height:8px;border-radius:50%;background:var(--text-3);flex-shrink:0;transition:background .3s;}
+    .status-dot.active{background:var(--green);box-shadow:0 0 8px var(--green-glow);animation:blink 1.4s infinite;}
+    .status-dot.error{background:var(--rose);}
+    .cam-status-label{font-size:.78rem;color:var(--text-3);transition:color .3s;}
+    .cam-status-label.active{color:var(--green);}
+    .cam-status-label.error{color:var(--rose);}
+
+    /* ── SOURCE PILLS ── */
+    .source-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+    .source-pill{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r-2xl);font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--text-2);transition:all .2s;font-family:var(--font-body);}
+    .source-pill:hover{border-color:var(--border-glow);color:var(--text-1);}
+    .source-pill.active{background:var(--green-pale);border-color:var(--border-glow);color:var(--green);}
+    .source-pill i{font-size:.8rem;}
+
+    /* ── VIDEO ── */
+    .video-wrap{position:relative;width:100%;aspect-ratio:16/9;background:var(--ink-3);border-radius:var(--r-md);overflow:hidden;border:1px solid var(--border);}
+    .video-wrap video{width:100%;height:100%;object-fit:cover;display:block;}
+    .video-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--text-3);transition:opacity .3s;}
+    .video-placeholder i{font-size:3rem;opacity:.4;}
+    .video-placeholder p{font-size:.85rem;opacity:.6;}
+    .video-wrap.running .video-placeholder{opacity:0;pointer-events:none;}
+    .scan-line{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:0;pointer-events:none;}
+    .video-wrap.running .scan-line{opacity:.6;animation:scanDown 3s linear infinite;}
+    @keyframes scanDown{from{top:0%}to{top:100%}}
+
+    /* ── CONTROLS ── */
+    .controls-row{display:flex;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap;}
+
+    /* ── STATUS BAR ── */
+    .status-bar{margin-top:14px;padding:11px 16px;background:var(--ink-3);border-radius:var(--r-sm);border-left:3px solid var(--border-glow);font-size:.82rem;color:var(--text-3);display:flex;align-items:center;gap:9px;transition:border-color .3s;}
+    .status-bar.ok{border-color:var(--green);color:var(--text-2);}
+    .status-bar.err{border-color:var(--rose);color:var(--rose);}
+    .status-bar.snap{border-color:var(--sky);color:var(--text-2);}
+    .status-bar.ai{border-color:var(--amber);color:var(--text-2);}
+
+    /* ── SNAPSHOT ── */
+    .snapshot-section{margin-top:24px;padding-top:22px;border-top:1px solid var(--border);display:none;}
+    .snapshot-section.visible{display:block;}
+    .snapshot-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+    .snapshot-label i{color:var(--green);}
+    .snapshot-wrap{position:relative;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--border-glow);box-shadow:0 0 32px rgba(16,212,102,.1);}
+    .snapshot-wrap canvas{width:100%;height:auto;display:block;}
+    .snapshot-badge{position:absolute;top:10px;right:10px;background:rgba(5,11,8,.85);backdrop-filter:blur(8px);border:1px solid var(--border-glow);border-radius:var(--r-2xl);padding:4px 12px;font-size:.72rem;color:var(--green);display:flex;align-items:center;gap:6px;}
+    .snapshot-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+
+    /* ── AI RESULT ── */
+    .ai-result-panel{background:var(--ink-3);border-radius:var(--r-md);padding:18px;margin-top:16px;border:1px solid var(--border);display:none;}
+    .ai-result-panel.visible{display:block;}
+    .ai-result-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+    .ai-result-icon{width:42px;height:42px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+    .ai-result-icon.healthy{background:var(--green-pale);color:var(--green);}
+    .ai-result-icon.disease{background:var(--rose-pale);color:var(--rose);}
+    .ai-result-icon.neutral{background:var(--amber-pale);color:var(--amber);}
+    .ai-disease-name{font-family:var(--font-head);font-weight:800;font-size:1rem;margin-bottom:2px;}
+    .ai-disease-name.healthy{color:var(--green);}
+    .ai-disease-name.disease{color:var(--rose);}
+    .ai-confidence{font-size:.75rem;color:var(--text-3);}
+    .ai-desc{font-size:.83rem;color:var(--text-2);line-height:1.65;margin-bottom:10px;}
+    .ai-treatment{font-size:.83rem;color:var(--green);display:flex;align-items:flex-start;gap:7px;line-height:1.55;}
+    .ai-treatment i{margin-top:2px;flex-shrink:0;}
+    .ai-preds{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:7px;}
+    .pred-row{display:flex;align-items:center;gap:8px;font-size:.75rem;}
+    .pred-label{flex:1;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .pred-bar-wrap{width:80px;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;}
+    .pred-bar{height:100%;background:var(--green);border-radius:2px;transition:width .5s var(--ease);}
+    .pred-pct{width:34px;text-align:right;color:var(--text-3);}
+    .ai-spinner{display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--amber);padding:6px 0;}
+    .ai-spinner i{animation:spin 1s linear infinite;}
+    @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .ai-error-msg{color:var(--rose);font-size:.82rem;display:flex;align-items:center;gap:8px;}
+
+    /* ── SIDE / IoT ── */
+    .side-col{display:flex;flex-direction:column;gap:20px;}
+    .iot-mini-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;}
+    .iot-conn-badge{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--text-3);padding:4px 10px;border-radius:var(--r-2xl);background:var(--card);border:1px solid var(--border);}
+    .iot-conn-badge.connected{color:var(--green);border-color:var(--border-glow);}
+    .iot-conn-badge.connected i{animation:blink 1.2s infinite;}
+    .iot-refresh-btn{display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--text-3);font-size:.75rem;cursor:pointer;padding:0;transition:color .2s;font-family:var(--font-body);}
+    .iot-refresh-btn:hover{color:var(--green);}
+    .iot-refresh-btn.spinning i{animation:spin .8s linear infinite;}
+    .sensor-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .sensor-tile{background:var(--ink-3);border-radius:var(--r-md);padding:14px 16px;border:1px solid var(--border);transition:border-color .3s;}
+    .sensor-tile:hover{border-color:var(--border-glow);}
+    .sensor-tile.alert-tile{border-color:var(--rose);background:rgba(255,91,110,.06);}
+    .sensor-tile.warn-tile{border-color:var(--amber);background:rgba(247,194,69,.06);}
+    .sensor-lbl{font-size:.65rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+    .sensor-lbl i{color:var(--green);}
+    .sensor-val{font-family:var(--font-head);font-size:1.2rem;font-weight:800;color:var(--text-1);}
+    .sensor-val.s-ok{color:var(--green);}
+    .sensor-val.s-warn{color:var(--amber);}
+    .sensor-val.s-err{color:var(--rose);}
+    .sensor-range{font-size:.68rem;color:var(--text-3);margin-top:3px;}
+    .iot-alerts-wrap{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+    .iot-alerts-lbl{font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+    .iot-alerts-lbl i{color:var(--green);}
+    .alert-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem;color:var(--text-2);}
+    .alert-item:last-child{border-bottom:none;}
+    .alert-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+    .alert-dot.d-ok{background:var(--green);}
+    .alert-dot.d-warn{background:var(--amber);}
+    .alert-dot.d-err{background:var(--rose);}
+
+    /* ── STATS ROW ── */
+    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px;}
+    .stat-tile{background:var(--card);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;text-align:center;transition:border-color .3s;}
+    .stat-tile:hover{border-color:var(--border-glow);}
+    .stat-tile .val{font-family:var(--font-head);font-size:1.3rem;font-weight:800;color:var(--green);margin-bottom:4px;}
+    .stat-tile .lbl{font-size:.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;}
+
+    /* ── FOOTER ── */
+    .footer{background:rgba(5,11,8,.85);border-top:1px solid var(--border);padding:24px 0;}
+    .footer-inner{max-width:1280px;margin:0 auto;padding:0 clamp(20px,4vw,48px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+    .footer-brand{font-family:var(--font-head);font-weight:800;font-size:1.1rem;display:flex;align-items:center;gap:8px;}
+    .footer-brand i,.footer-brand span{color:var(--green);}
+    .footer-copy{font-size:.78rem;color:var(--text-3);}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1024px){.page-grid{grid-template-columns:1fr;}}
+    @media(max-width:768px){
+      .nav-links .nav-link,.nav-links .btn-nav{display:none;}
+      .mobile-menu-btn{display:block;}
+      .nav-links.open{display:flex;flex-direction:column;position:fixed;top:72px;left:0;right:0;background:rgba(5,11,8,.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:12px;gap:4px;z-index:899;}
+      .nav-links.open .nav-link{display:flex;border-radius:var(--r-md);}
+      .nav-links.open .btn-nav{display:flex;justify-content:center;margin:8px 0 4px;border-radius:var(--r-md);}
+      .stats-row{grid-template-columns:1fr 1fr;}
+      .controls-row{flex-wrap:wrap;}
+      .cam-header-inner{flex-direction:column;}
+    }
+    @media(max-width:480px){.stats-row{grid-template-columns:1fr;}}
+  </style>
 </head>
-<body class="iot-page">
+<body>
 
 <!-- ═══ NAVBAR ═══ -->
 <nav class="navbar" id="navbar">
   <div class="navbar-inner">
     <a href="home.html" class="logo"><i class="fas fa-leaf"></i>Hela<span>Grow</span></a>
     <div class="nav-links" id="navLinks">
-      <a href="home.html"   class="nav-link"><i class="fas fa-home"></i> Home</a>
-      <a href="#dashboard"  class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a>
-      <a href="#camera"     class="nav-link"><i class="fas fa-video"></i> Camera</a>
+      <a href="home.html"    class="nav-link"><i class="fas fa-home"></i> Home</a>
+      <a href="#"            class="nav-link active"><i class="fas fa-camera"></i> Camera</a>
       <a href="disease.html" class="nav-link"><i class="fas fa-bug"></i> Diseases</a>
-      <a href="home.html#scan" class="btn-nav"><i class="fas fa-camera"></i> Scan Plant</a>
+      <a href="iot.html"     class="btn-nav"><i class="fas fa-satellite-dish"></i> IoT Monitor</a>
     </div>
     <button class="mobile-menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
   </div>
 </nav>
 
-<!-- ═══ IoT HEADER ═══ -->
-<header class="iot-header" id="dashboard">
+<!-- ═══ HEADER ═══ -->
+<header class="cam-header">
   <div class="container">
-    <div class="iot-header-inner">
+    <div class="cam-header-inner">
       <div>
-        <div class="section-tag" style="margin-bottom:12px;">
-          <i class="fas fa-satellite-dish"></i> Real-Time Monitoring
-        </div>
-        <h1>IoT Live Dashboard</h1>
-        <p>ESP32 sensor network — environmental telemetry for your Centella Asiatica crop</p>
+        <div class="section-tag"><i class="fas fa-camera"></i> Live Camera</div>
+        <h1>Camera <span style="color:var(--green)">Access</span></h1>
+        <p>Capture plant images from your laptop or phone — get instant AI disease diagnosis.</p>
         <div class="header-badges">
-          <div class="hbadge" id="iotConnectionBadge">
-            <i class="fas fa-circle"></i> Waiting for ESP32
-          </div>
-          <div class="hbadge">
-            <i class="fas fa-clock"></i>
-            Last refreshed: <span id="lastUpdate" style="margin-left:4px;font-weight:600;color:var(--text-1);">—</span>
-          </div>
-          <div class="hbadge">
-            <i class="fas fa-microchip"></i> Device: <span id="deviceId" style="margin-left:4px;font-weight:600;color:var(--text-1);">--</span>
-          </div>
+          <div class="hbadge" id="camStatusBadge"><i class="fas fa-circle"></i> Camera Idle</div>
+          <div class="hbadge"><i class="fas fa-camera-retro"></i> Snapshots: <span id="snapCountBadge" style="margin-left:4px;font-weight:700;color:var(--text-1);">0</span></div>
+          <div class="hbadge"><i class="fas fa-satellite-dish"></i> IoT: <span id="iotBadgeTxt" style="margin-left:4px;font-weight:600;">Connecting…</span></div>
         </div>
       </div>
-
-      <div class="header-btns">
-        <button class="btn btn-secondary" onclick="refreshCamera()">
-          <i class="fas fa-sync-alt"></i> Refresh Feed
-        </button>
-        <a class="btn btn-primary" href="#" target="_blank" id="openCameraBtn">
-          <i class="fas fa-up-right-from-square"></i> Open Camera
-        </a>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="home.html#scan" class="btn btn-secondary"><i class="fas fa-brain"></i> AI Scan</a>
+        <a href="iot.html"       class="btn btn-outline"><i class="fas fa-satellite-dish"></i> IoT Monitor</a>
       </div>
     </div>
   </div>
 </header>
 
-<!-- ═══ CAMERA FEED ═══ -->
-<section class="iot-section" id="camera" style="padding-top:48px;">
+<!-- ═══ MAIN ═══ -->
+<section class="main-section">
   <div class="container">
+    <div class="page-grid">
 
-    <!-- Camera Card -->
-    <div class="cam-card reveal">
-      <div class="cam-card-head">
-        <h3><i class="fas fa-video"></i> ESP32-CAM Live Feed</h3>
-        <span class="cam-ip" id="cameraIp">--</span>
-      </div>
-      <div class="cam-body">
-        <iframe
-          id="cameraFrame"
-          class="cam-frame"
-          src="about:blank"
-          title="ESP32-CAM Live Feed">
-        </iframe>
+      <!-- ════ LEFT: CAMERA ════ -->
+      <div>
+        <div class="cam-card">
+          <div class="cam-card-head">
+            <h3><i class="fas fa-video"></i> Live Feed</h3>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="status-dot" id="statusDot"></div>
+              <span class="cam-status-label" id="statusLabel">Inactive</span>
+            </div>
+          </div>
+          <div class="cam-body">
 
-        <p class="cam-note">
-          <i class="fas fa-info-circle" style="color:var(--green);margin-right:6px;"></i>
-          Live stream from the ESP32-CAM module mounted over the crop bed.
-          Ensure your device is on the same local network as the camera module.
-          Use the <strong>Open Camera</strong> button to view the full-resolution stream in a new tab.
-        </p>
-        <div id="iotLoading" style="display:none;color:var(--text-3);font-size:0.8rem;margin:8px 0 0;">
-          <i class="fas fa-spinner fa-spin"></i> Fetching live telemetry...
-        </div>
+            <!-- Camera source selector -->
+            <div class="source-pills">
+              <button class="source-pill active" id="pillBack"  onclick="selectFacing('environment')">
+                <i class="fas fa-mobile-alt"></i> Rear / Webcam
+              </button>
+              <button class="source-pill" id="pillFront" onclick="selectFacing('user')">
+                <i class="fas fa-user-circle"></i> Front Camera
+              </button>
+              <button class="source-pill" id="pillAny"   onclick="selectFacing('any')">
+                <i class="fas fa-desktop"></i> System Default
+              </button>
+            </div>
 
-        <div class="cam-actions">
-          <a class="btn btn-primary" href="#" target="_blank" id="fullResolutionBtn">
-            <i class="fas fa-camera"></i> Full Resolution Feed
-          </a>
-          <button class="btn btn-secondary" onclick="refreshCamera()">
-            <i class="fas fa-sync-alt"></i> Reload Frame
-          </button>
-          <a class="btn btn-outline" href="home.html#scan">
-            <i class="fas fa-brain"></i> AI Disease Scan
-          </a>
-        </div>
-      </div>
-    </div>
+            <!-- Video frame -->
+            <div class="video-wrap" id="videoWrap">
+              <video id="video" autoplay playsinline muted></video>
+              <div class="scan-line"></div>
+              <div class="video-placeholder" id="placeholder">
+                <i class="fas fa-camera"></i>
+                <p>Select a source above, then press <strong>Start Camera</strong></p>
+              </div>
+            </div>
 
-    <!-- Info strip -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;" class="reveal">
-      <div class="cam-card" style="padding:20px 24px;">
-        <div style="font-size:0.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;">
-          <i class="fas fa-temperature-half" style="color:var(--green);margin-right:6px;"></i>Temperature
-        </div>
-        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;" id="tempValue">--</div>
-        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Target: 20 - 30 C</div>
-      </div>
-      <div class="cam-card" style="padding:20px 24px;">
-        <div style="font-size:0.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;">
-          <i class="fas fa-droplet" style="color:var(--green);margin-right:6px;"></i>Humidity
-        </div>
-        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;" id="humidityValue">--</div>
-        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Target: 60 - 80 %</div>
-      </div>
-      <div class="cam-card" style="padding:20px 24px;">
-        <div style="font-size:0.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;">
-          <i class="fas fa-water" style="color:var(--green);margin-right:6px;"></i>Soil Moisture
-        </div>
-        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;" id="soilValue">--</div>
-        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Irrigation threshold: 35 %</div>
-      </div>
-    </div>
+            <!-- Controls -->
+            <div class="controls-row">
+              <button class="btn btn-primary"   id="startBtn" onclick="startCamera()"><i class="fas fa-play"></i> Start Camera</button>
+              <button class="btn btn-danger"    id="stopBtn"  onclick="stopCamera()"   disabled><i class="fas fa-stop"></i> Stop</button>
+              <button class="btn btn-secondary" id="snapBtn"  onclick="takeSnapshot()" disabled><i class="fas fa-camera-retro"></i> Snapshot</button>
+              <button class="btn btn-outline"   id="flipBtn"  onclick="flipCamera()"   disabled title="Flip front ↔ rear"><i class="fas fa-sync-alt"></i> Flip</button>
+            </div>
 
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px;" class="reveal">
-      <div class="cam-card" style="padding:20px 24px;">
-        <div style="font-size:0.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;">
-          <i class="fas fa-sun" style="color:var(--green);margin-right:6px;"></i>Light Intensity
-        </div>
-        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;" id="lightValue">--</div>
-        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Low light may slow growth</div>
-      </div>
-      <div class="cam-card" style="padding:20px 24px;">
-        <div style="font-size:0.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;">
-          <i class="fas fa-clock" style="color:var(--green);margin-right:6px;"></i>Last Sensor Update
-        </div>
-        <div style="font-family:var(--font-head);font-weight:700;font-size:1rem;" id="lastSensorUpdate">--</div>
-        <div style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Telemetry received by backend API</div>
-      </div>
-    </div>
+            <!-- Status bar -->
+            <div class="status-bar" id="statusBar">
+              <i class="fas fa-info-circle"></i>
+              <span id="statusMsg">Select a camera source above and press Start.</span>
+            </div>
 
-    <div class="cam-card reveal" style="padding:20px 24px;margin-top:16px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;">
-        <h3 style="font-size:1rem;"><i class="fas fa-bell"></i> Sensor Alerts</h3>
-      </div>
-      <div class="notif-panel" id="iotAlerts" style="display:block;">
-        <div class="notif-item">
-          <div class="notif-text">
-            <p>Waiting for live alert data...</p>
+            <!-- Snapshot + AI result -->
+            <div class="snapshot-section" id="snapshotSection">
+              <div class="snapshot-label"><i class="fas fa-image"></i> Captured Snapshot</div>
+              <div class="snapshot-wrap">
+                <canvas id="canvas"></canvas>
+                <div class="snapshot-badge"><i class="fas fa-check-circle"></i> Captured</div>
+              </div>
+
+              <!-- AI result injected here -->
+              <div class="ai-result-panel" id="aiResultPanel"></div>
+
+              <div class="snapshot-actions">
+                <button class="btn btn-primary"   onclick="runAiAnalysis()"><i class="fas fa-brain"></i> Re-Analyse</button>
+                <button class="btn btn-secondary" onclick="downloadSnapshot()"><i class="fas fa-download"></i> Download</button>
+                <button class="btn btn-outline"   onclick="clearSnapshot()"><i class="fas fa-trash-alt"></i> Clear</button>
+              </div>
+            </div>
+
           </div>
         </div>
-      </div>
-    </div>
 
-  </div>
-</section>
+        <!-- Stats row -->
+        <div class="stats-row">
+          <div class="stat-tile"><div class="val" id="statStatus">Off</div><div class="lbl">Camera</div></div>
+          <div class="stat-tile"><div class="val" id="statSnaps">0</div><div class="lbl">Snapshots</div></div>
+          <div class="stat-tile"><div class="val" id="statRes">—</div><div class="lbl">Resolution</div></div>
+        </div>
 
-<!-- ═══ QUICK LINKS ═══ -->
-<section class="iot-section" style="padding-bottom:80px;">
-  <div class="container">
-    <div class="section-tag reveal"><i class="fas fa-link"></i> Navigation</div>
-    <h2 class="section-title reveal">Continue <span class="accent">Exploring</span></h2>
-
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px;">
-
-      <div class="cam-card reveal" style="padding:28px;">
-        <div style="font-size:2rem;color:var(--green);margin-bottom:14px;"><i class="fas fa-bug"></i></div>
-        <h3 style="font-family:var(--font-head);font-size:1rem;font-weight:700;margin-bottom:8px;">Disease Library</h3>
-        <p style="font-size:0.85rem;color:var(--text-2);margin-bottom:18px;line-height:1.6;">
-          Full guide to diseases, pests, and nutrient deficiencies affecting Centella Asiatica.
-        </p>
-        <a href="disease.html" class="btn btn-secondary" style="font-size:0.82rem;padding:8px 18px;">
-          <i class="fas fa-book-open"></i> View Guide
-        </a>
+        <!-- Privacy note -->
+        <div style="margin-top:16px;padding:14px 18px;background:var(--card);border-radius:var(--r-md);border:1px solid var(--border);font-size:.82rem;color:var(--text-3);display:flex;align-items:flex-start;gap:10px;">
+          <i class="fas fa-shield-alt" style="color:var(--green);margin-top:2px;flex-shrink:0;"></i>
+          <span><strong style="color:var(--text-2);">Privacy:</strong> Video is processed on-device. Images are sent to the AI only when you trigger Snapshot — no continuous data leaves your browser.</span>
+        </div>
       </div>
 
-      <div class="cam-card reveal" style="padding:28px;">
-        <div style="font-size:2rem;color:var(--green);margin-bottom:14px;"><i class="fas fa-camera"></i></div>
-        <h3 style="font-family:var(--font-head);font-size:1rem;font-weight:700;margin-bottom:8px;">AI Plant Scan</h3>
-        <p style="font-size:0.85rem;color:var(--text-2);margin-bottom:18px;line-height:1.6;">
-          Use your device camera for instant AI-powered disease detection and diagnosis.
-        </p>
-        <a href="home.html#scan" class="btn btn-secondary" style="font-size:0.82rem;padding:8px 18px;">
-          <i class="fas fa-brain"></i> Scan Now
-        </a>
-      </div>
+      <!-- ════ RIGHT: SIDE PANEL ════ -->
+      <div class="side-col">
 
-      <div class="cam-card reveal" style="padding:28px;">
-        <div style="font-size:2rem;color:var(--green);margin-bottom:14px;"><i class="fas fa-home"></i></div>
-        <h3 style="font-family:var(--font-head);font-size:1rem;font-weight:700;margin-bottom:8px;">Home Dashboard</h3>
-        <p style="font-size:0.85rem;color:var(--text-2);margin-bottom:18px;line-height:1.6;">
-          Return to the main HelaGrow AI homepage for all features and system overview.
-        </p>
-        <a href="home.html" class="btn btn-secondary" style="font-size:0.82rem;padding:8px 18px;">
-          <i class="fas fa-arrow-left"></i> Go Home
-        </a>
-      </div>
+        <!-- IoT sensor card -->
+        <div class="cam-card">
+          <div class="cam-card-head">
+            <h3><i class="fas fa-satellite-dish"></i> IoT Sensors</h3>
+            <button class="iot-refresh-btn" id="iotRefreshBtn" onclick="fetchIotData(true)">
+              <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+          </div>
+          <div class="cam-body" style="padding:20px;">
 
+            <div class="iot-mini-header">
+              <div class="iot-conn-badge" id="iotConnBadge">
+                <i class="fas fa-circle"></i> Waiting for ESP32
+              </div>
+              <span style="font-size:.7rem;color:var(--text-3);">
+                Updated: <span id="iotLastUpdate">—</span>
+              </span>
+            </div>
+
+            <div class="sensor-grid">
+              <div class="sensor-tile" id="tileTemp">
+                <div class="sensor-lbl"><i class="fas fa-temperature-half"></i> Temp</div>
+                <div class="sensor-val" id="sTemp">--</div>
+                <div class="sensor-range">Target: 20–30 °C</div>
+              </div>
+              <div class="sensor-tile" id="tileHumid">
+                <div class="sensor-lbl"><i class="fas fa-droplet"></i> Humidity</div>
+                <div class="sensor-val" id="sHumid">--</div>
+                <div class="sensor-range">Target: 60–80 %</div>
+              </div>
+              <div class="sensor-tile" id="tileSoil">
+                <div class="sensor-lbl"><i class="fas fa-water"></i> Soil</div>
+                <div class="sensor-val" id="sSoil">--</div>
+                <div class="sensor-range">Irrigate below 35 %</div>
+              </div>
+              <div class="sensor-tile" id="tileLight">
+                <div class="sensor-lbl"><i class="fas fa-sun"></i> Light</div>
+                <div class="sensor-val" id="sLight">--</div>
+                <div class="sensor-range">Low → slow growth</div>
+              </div>
+            </div>
+
+            <div class="iot-alerts-wrap">
+              <div class="iot-alerts-lbl"><i class="fas fa-bell"></i> Alerts</div>
+              <div id="iotAlertsBox">
+                <div class="alert-item">
+                  <div class="alert-dot"></div><span>Waiting for live data…</span>
+                </div>
+              </div>
+            </div>
+
+            <a href="iot.html" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:16px;font-size:.82rem;padding:9px 18px;">
+              <i class="fas fa-external-link-alt"></i> Open Full Dashboard
+            </a>
+          </div>
+        </div>
+
+        <!-- Tips card -->
+        <div class="cam-card">
+          <div class="cam-card-head"><h3><i class="fas fa-lightbulb"></i> Capture Tips</h3></div>
+          <div class="cam-body" style="padding:20px;">
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div style="display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--text-2);">
+                <i class="fas fa-sun" style="color:var(--amber);margin-top:3px;flex-shrink:0;"></i>
+                <span>Use <strong style="color:var(--text-1);">natural light</strong> or bright diffuse lighting — avoid harsh flash.</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--text-2);">
+                <i class="fas fa-expand-arrows-alt" style="color:var(--sky);margin-top:3px;flex-shrink:0;"></i>
+                <span>Fill the frame with the <strong style="color:var(--text-1);">affected leaf</strong> at 10–20 cm distance.</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--text-2);">
+                <i class="fas fa-leaf" style="color:var(--green);margin-top:3px;flex-shrink:0;"></i>
+                <span>Include both <strong style="color:var(--text-1);">healthy and affected</strong> areas for context.</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--text-2);">
+                <i class="fas fa-hand-paper" style="color:var(--rose);margin-top:3px;flex-shrink:0;"></i>
+                <span>Hold steady — motion blur reduces AI accuracy.</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--text-2);">
+                <i class="fas fa-keyboard" style="color:var(--violet,#a78bfa);margin-top:3px;flex-shrink:0;"></i>
+                <span><strong style="color:var(--text-1);">Space</strong> = snapshot &nbsp;·&nbsp; <strong style="color:var(--text-1);">F</strong> = flip &nbsp;·&nbsp; <strong style="color:var(--text-1);">Esc</strong> = stop</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 </section>
@@ -210,12 +439,365 @@
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-brand"><i class="fas fa-leaf"></i>Hela<span>Grow</span> AI</div>
-    <div class="footer-copy">
-      © 2026 HelaGrow AI &nbsp;·&nbsp; IoT Monitoring Module &nbsp;·&nbsp; <strong>Sachintha Nimeshi</strong>
-    </div>
+    <div class="footer-copy">© 2026 HelaGrow AI &nbsp;·&nbsp; Camera Module &nbsp;·&nbsp; <strong>Sachintha Nimeshi</strong></div>
   </div>
 </footer>
 
-<script src="script.js"></script>
+<script>
+'use strict';
+
+/* ═══ CONFIG ═══ */
+const API_SERVER = 'http://localhost:5000';   // your Flask backend
+
+/* ═══ NAVBAR ═══ */
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+document.getElementById('menuBtn').addEventListener('click', () => {
+  const nl = document.getElementById('navLinks');
+  nl.classList.toggle('open');
+  document.getElementById('menuBtn').querySelector('i').className =
+    nl.classList.contains('open') ? 'fas fa-times' : 'fas fa-bars';
+});
+document.addEventListener('click', e => {
+  const nl = document.getElementById('navLinks');
+  const mb = document.getElementById('menuBtn');
+  if (nl.classList.contains('open') && !nl.contains(e.target) && !mb.contains(e.target)) {
+    nl.classList.remove('open');
+    mb.querySelector('i').className = 'fas fa-bars';
+  }
+});
+
+/* ═══ CAMERA STATE ═══ */
+let stream     = null;
+let facingMode = 'environment';
+let snapCount  = 0;
+let lastB64    = null;
+
+const video     = document.getElementById('video');
+const canvas    = document.getElementById('canvas');
+const videoWrap = document.getElementById('videoWrap');
+
+/* ── Source pill ── */
+function selectFacing(mode) {
+  facingMode = mode;
+  document.querySelectorAll('.source-pill').forEach(p => p.classList.remove('active'));
+  const map = { environment: 'pillBack', user: 'pillFront', any: 'pillAny' };
+  document.getElementById(map[mode])?.classList.add('active');
+  if (stream) stopCamera();
+}
+
+/* ── Flip front ↔ rear ── */
+async function flipCamera() {
+  if (!stream) return;
+  facingMode = (facingMode === 'user') ? 'environment' : 'user';
+  const map  = { environment: 'pillBack', user: 'pillFront' };
+  document.querySelectorAll('.source-pill').forEach(p => p.classList.remove('active'));
+  document.getElementById(map[facingMode] || 'pillBack')?.classList.add('active');
+  await startCamera();
+}
+
+function buildConstraints() {
+  if (facingMode === 'any')
+    return { video: { width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false };
+  return {
+    video: { facingMode: { ideal: facingMode }, width: { ideal: 1280 }, height: { ideal: 720 } },
+    audio: false
+  };
+}
+
+/* ═══ START / STOP ═══ */
+async function startCamera() {
+  setStatus('', 'spinner fa-spin', 'Requesting camera access…');
+  setBadge('idle');
+
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+
+  if (!navigator.mediaDevices?.getUserMedia) {
+    setStatus('err', 'exclamation-triangle', 'Camera API unavailable — serve this page over HTTPS or localhost.');
+    dotState('error'); lblState('error', 'Error'); setBadge('error'); return;
+  }
+
+  try {
+    try   { stream = await navigator.mediaDevices.getUserMedia(buildConstraints()); }
+    catch { stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false }); }
+
+    video.srcObject = stream;
+    video.onloadedmetadata = () => updateStats(true);
+
+    videoWrap.classList.add('running');
+    dotState('active'); lblState('active', 'Live'); setBadge('live');
+
+    setBtn('startBtn', true);
+    setBtn('stopBtn',  false);
+    setBtn('snapBtn',  false);
+    setBtn('flipBtn',  false);
+    setStatus('ok', 'check-circle', 'Camera active — point at your plant and press Snapshot (or Space).');
+  } catch (err) {
+    let msg = 'Error: ' + err.message;
+    if (err.name === 'NotAllowedError')  msg = 'Permission denied — allow camera in browser settings and retry.';
+    if (err.name === 'NotFoundError')    msg = 'No camera found on this device.';
+    if (err.name === 'NotReadableError') msg = 'Camera is in use by another app — close it and retry.';
+    dotState('error'); lblState('error', 'Error'); setBadge('error');
+    setStatus('err', 'exclamation-triangle', msg);
+  }
+}
+
+function stopCamera() {
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+  video.srcObject = null;
+  videoWrap.classList.remove('running');
+  dotState(''); lblState('', 'Inactive'); setBadge('idle');
+
+  setBtn('startBtn', false);
+  setBtn('stopBtn',  true);
+  setBtn('snapBtn',  true);
+  setBtn('flipBtn',  true);
+
+  setStatus('', 'info-circle', 'Camera stopped.');
+  updateStats(false);
+}
+
+/* ═══ SNAPSHOT ═══ */
+function takeSnapshot() {
+  if (!stream) return;
+  const w = video.videoWidth  || 1280;
+  const h = video.videoHeight || 720;
+  canvas.width = w; canvas.height = h;
+  canvas.getContext('2d').drawImage(video, 0, 0, w, h);
+  lastB64 = canvas.toDataURL('image/jpeg', 0.92).split(',')[1];
+
+  snapCount++;
+  document.getElementById('snapshotSection').classList.add('visible');
+  document.getElementById('snapCountBadge').textContent = snapCount;
+  setStatus('snap', 'camera-retro', `Snapshot captured (${w}×${h}) — running AI analysis…`);
+  updateStats(true);
+
+  // white flash
+  const f = document.createElement('div');
+  f.style.cssText = 'position:absolute;inset:0;background:#fff;opacity:.5;pointer-events:none;border-radius:var(--r-md);transition:opacity .4s;';
+  videoWrap.appendChild(f);
+  setTimeout(() => { f.style.opacity='0'; setTimeout(()=>f.remove(),400); }, 30);
+
+  runAiAnalysis();
+}
+
+function downloadSnapshot() {
+  const a = document.createElement('a');
+  a.href     = canvas.toDataURL('image/png');
+  a.download = 'helagrow-snapshot-' + Date.now() + '.png';
+  a.click();
+}
+
+function clearSnapshot() {
+  document.getElementById('snapshotSection').classList.remove('visible');
+  document.getElementById('aiResultPanel').className = 'ai-result-panel';
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  lastB64 = null;
+  setStatus('', 'info-circle', 'Snapshot cleared.');
+}
+
+/* ═══ AI DISEASE ANALYSIS ═══ */
+async function runAiAnalysis() {
+  if (!lastB64) return;
+  const panel = document.getElementById('aiResultPanel');
+  panel.className = 'ai-result-panel visible';
+  panel.innerHTML = `<div class="ai-spinner"><i class="fas fa-brain"></i> Analysing with AI…</div>`;
+  setStatus('ai', 'spinner fa-spin', 'Sending image to AI model…');
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: lastB64 } },
+            { type: 'text', text: `You are an expert plant pathologist specialising in Centella Asiatica (Gotu Kola).
+Analyse this image and respond ONLY with a valid JSON object — no markdown, no extra text.
+
+Required format:
+{
+  "disease": "<disease name or 'Healthy'>",
+  "confidence": <0–100 integer>,
+  "description": "<one-sentence summary>",
+  "treatment": "<brief recommended action>",
+  "all_predictions": {
+    "<top label>": <confidence %>,
+    "<2nd label>": <confidence %>,
+    "<3rd label>": <confidence %>
+  }
+}
+
+If this is not a plant image, set disease to "Not a plant image" and confidence to 0.` }
+          ]
+        }]
+      })
+    });
+
+    if (!resp.ok) {
+      const e = await resp.json().catch(()=>({}));
+      throw new Error(e.error?.message || 'API error ' + resp.status);
+    }
+
+    const api = await resp.json();
+    const raw = api.content?.map(b => b.text||'').join('') || '';
+    let data;
+    try { data = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+    catch { throw new Error('Unexpected AI response — please retry.'); }
+
+    renderAiResult(data);
+    setStatus('ok', 'check-circle', 'AI analysis complete.');
+
+  } catch(err) {
+    panel.innerHTML = `<div class="ai-error-msg"><i class="fas fa-exclamation-triangle"></i>${err.message}</div>`;
+    setStatus('err', 'exclamation-triangle', 'AI analysis failed: ' + err.message);
+  }
+}
+
+function renderAiResult(data) {
+  const label   = data.disease || 'Unknown';
+  const isGood  = /healthy|normal/i.test(label);
+  const isVoid  = label === 'Not a plant image';
+  const cls     = isGood ? 'healthy' : (isVoid ? 'neutral' : 'disease');
+  const icon    = isGood ? 'fa-check-circle' : (isVoid ? 'fa-question-circle' : 'fa-exclamation-circle');
+  const conf    = data.confidence ?? '—';
+
+  let predsHtml = '';
+  if (data.all_predictions) {
+    const rows = Object.entries(data.all_predictions).sort((a,b)=>b[1]-a[1]).slice(0,4)
+      .map(([lbl,pct])=>`
+        <div class="pred-row">
+          <span class="pred-label">${lbl}</span>
+          <div class="pred-bar-wrap"><div class="pred-bar" style="width:${pct}%"></div></div>
+          <span class="pred-pct">${pct}%</span>
+        </div>`).join('');
+    predsHtml = `<div class="ai-preds">${rows}</div>`;
+  }
+
+  document.getElementById('aiResultPanel').innerHTML = `
+    <div class="ai-result-header">
+      <div class="ai-result-icon ${cls}"><i class="fas ${icon}"></i></div>
+      <div>
+        <div class="ai-disease-name ${cls}">${label}</div>
+        <div class="ai-confidence">Confidence: <strong>${conf}%</strong></div>
+      </div>
+    </div>
+    ${data.description ? `<div class="ai-desc">${data.description}</div>` : ''}
+    ${data.treatment   ? `<div class="ai-treatment"><i class="fas fa-stethoscope"></i><span>${data.treatment}</span></div>` : ''}
+    ${predsHtml}
+  `;
+}
+
+/* ═══ IoT DATA (polls Flask /iot/data every 5s) ═══ */
+async function fetchIotData(manual = false) {
+  const btn = document.getElementById('iotRefreshBtn');
+  if (manual) btn.classList.add('spinning');
+
+  try {
+    const res = await fetch(`${API_SERVER}/iot/data`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const d = await res.json();
+
+    setSensor('sTemp',  d.temperature,  '°C', 'tileTemp',  20, 30);
+    setSensor('sHumid', d.humidity,     '%',  'tileHumid', 60, 80);
+    setSensor('sSoil',  d.soil_moisture,'%',  'tileSoil',  35,100);
+    setSensor('sLight', d.light,        '%',  'tileLight', 20,100);
+
+    document.getElementById('iotLastUpdate').textContent =
+      d.updated_at ? new Date(d.updated_at).toLocaleTimeString() : new Date().toLocaleTimeString();
+
+    const cb = document.getElementById('iotConnBadge');
+    cb.className = 'iot-conn-badge connected';
+    cb.innerHTML = '<i class="fas fa-circle"></i> ESP32 Connected';
+    document.getElementById('iotBadgeTxt').textContent = 'Connected';
+
+    renderAlerts(d.alerts);
+  } catch {
+    const cb = document.getElementById('iotConnBadge');
+    cb.className = 'iot-conn-badge';
+    cb.innerHTML = '<i class="fas fa-circle"></i> ESP32 Offline';
+    document.getElementById('iotBadgeTxt').textContent = 'Offline';
+  } finally {
+    if (manual) setTimeout(() => btn.classList.remove('spinning'), 700);
+  }
+}
+
+function setSensor(valId, raw, unit, tileId, lo, hi) {
+  const el   = document.getElementById(valId);
+  const tile = document.getElementById(tileId);
+  if (!el) return;
+  if (raw == null || isNaN(raw)) { el.textContent = '--'; el.className = 'sensor-val'; return; }
+  const v = parseFloat(raw).toFixed(1);
+  el.textContent = v + ' ' + unit;
+  if (parseFloat(v) < lo)      { el.className='sensor-val s-warn'; if(tile)tile.className='sensor-tile warn-tile'; }
+  else if (parseFloat(v) > hi) { el.className='sensor-val s-err';  if(tile)tile.className='sensor-tile alert-tile'; }
+  else                         { el.className='sensor-val s-ok';   if(tile)tile.className='sensor-tile'; }
+}
+
+function renderAlerts(alerts) {
+  const box = document.getElementById('iotAlertsBox');
+  if (!box) return;
+  if (!Array.isArray(alerts) || !alerts.length) {
+    box.innerHTML = '<div class="alert-item"><div class="alert-dot d-ok"></div><span>All sensors nominal</span></div>';
+    return;
+  }
+  box.innerHTML = alerts.map(a => {
+    const d = a.severity==='critical' ? 'd-err' : a.severity==='warn' ? 'd-warn' : 'd-ok';
+    return `<div class="alert-item"><div class="alert-dot ${d}"></div><span>${a.message}</span></div>`;
+  }).join('');
+}
+
+/* ═══ UI HELPERS ═══ */
+function setStatus(type, icon, msg) {
+  const b = document.getElementById('statusBar');
+  b.className = 'status-bar ' + type;
+  b.querySelector('i').className = 'fas fa-' + icon;
+  document.getElementById('statusMsg').textContent = msg;
+}
+function dotState(cls) { document.getElementById('statusDot').className = 'status-dot ' + cls; }
+function lblState(cls, txt) {
+  const el = document.getElementById('statusLabel');
+  el.className = 'cam-status-label ' + cls;
+  el.textContent = txt;
+}
+function setBadge(state) {
+  const b = document.getElementById('camStatusBadge');
+  b.innerHTML = {
+    live:  '<i class="fas fa-circle"></i> Camera Live',
+    error: '<i class="fas fa-circle"></i> Camera Error',
+    idle:  '<i class="fas fa-circle"></i> Camera Idle'
+  }[state] || '<i class="fas fa-circle"></i> Camera Idle';
+  b.classList.toggle('live', state === 'live');
+}
+function setBtn(id, disabled) { document.getElementById(id).disabled = disabled; }
+function updateStats(on) {
+  document.getElementById('statStatus').textContent = on ? 'Live' : 'Off';
+  document.getElementById('statSnaps').textContent  = snapCount;
+  if (on && video.videoWidth)
+    document.getElementById('statRes').textContent = video.videoWidth + '×' + video.videoHeight;
+  else if (!on)
+    document.getElementById('statRes').textContent = '—';
+}
+
+/* ═══ KEYBOARD SHORTCUTS ═══ */
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === ' ' && !document.getElementById('snapBtn').disabled) { e.preventDefault(); takeSnapshot(); }
+  if (e.key === 'Escape') stopCamera();
+  if ((e.key === 'f' || e.key === 'F') && stream) flipCamera();
+});
+
+/* ═══ INIT ═══ */
+document.addEventListener('DOMContentLoaded', () => {
+  fetchIotData();
+  setInterval(fetchIotData, 5000);
+  console.log('🌱 HelaGrow Camera Module ready');
+});
+</script>
 </body>
 </html>

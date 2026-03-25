@@ -1,5 +1,11 @@
 'use strict';
 
+/* ── API SERVER BASE URL ─────────────────────────────────── */
+// Points to your Flask backend. Change this if you deploy remotely.
+const API_SERVER = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? `http://${window.location.hostname}:5000`
+  : window.location.origin;
+
 /* NAVBAR  */
 const navbar    = document.getElementById('navbar');
 const menuBtn   = document.getElementById('menuBtn');
@@ -263,6 +269,28 @@ function closeStream() {
 }
 
 /* ── AI DISEASE ANALYSIS ─────────────────────────────────── */
+// Treatment recommendations mapped to each model class
+const TREATMENT_MAP = {
+  'Low light intensity (LI)':     'Move plants to a brighter location or supplement with grow lights.',
+  'Nitrogen Deficiency (ND)':     'Apply a balanced nitrogen-rich fertiliser (e.g. urea or NPK 20-10-10).',
+  'Normal Leaf (NL)':             'No action needed — plant appears healthy.',
+  'Phosphorus deficiency (PHD)':  'Apply a phosphorus fertiliser such as superphosphate or bone meal.',
+  'Potassium Deficiency (PD)':    'Apply potassium sulphate or muriate of potash fertiliser.',
+  'Red mite disease (RM)':        'Spray with neem oil or a miticide; remove heavily infested leaves.',
+  'Water Deficiency (WD)':        'Irrigate immediately and ensure consistent soil moisture (35–60%).',
+  'Worm Creep Decease (WCD)':     'Apply a targeted pesticide and improve drainage to deter pests.',
+};
+
+const DESCRIPTION_MAP = {
+  'Low light intensity (LI)':     'Plant is receiving insufficient light, causing pale or elongated growth.',
+  'Nitrogen Deficiency (ND)':     'Yellowing of older leaves indicating lack of nitrogen in the soil.',
+  'Normal Leaf (NL)':             'Leaf shows normal colour, texture, and structure.',
+  'Phosphorus deficiency (PHD)':  'Purplish discolouration on leaves signalling phosphorus shortage.',
+  'Potassium Deficiency (PD)':    'Browning leaf edges and weak stems due to potassium shortage.',
+  'Red mite disease (RM)':        'Tiny red mite infestation causing stippling and discolouration.',
+  'Water Deficiency (WD)':        'Wilting and dry leaf margins indicate insufficient soil moisture.',
+  'Worm Creep Decease (WCD)':     'Irregular holes and trails caused by worm or larval feeding damage.',
+};
 
 async function analyzeImage() {
   console.log('analyzeImage called');
@@ -280,76 +308,39 @@ async function analyzeImage() {
   if (result) result.style.display = 'none';
 
   try {
+    // Send image to Flask /predict endpoint (your trained Keras model)
     const dataUrl    = canvas.toDataURL('image/jpeg', 0.92);
     const base64Data = dataUrl.split(',')[1];
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(`${API_SERVER}/predict`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: [
-            {
-              type: 'image',
-              source: { type: 'base64', media_type: 'image/jpeg', data: base64Data }
-            },
-            {
-              type: 'text',
-              text: `You are an expert plant pathologist specialising in Centella Asiatica (Gotu Kola).
-Analyse this image and respond ONLY with a JSON object — no markdown, no extra text.
-
-Required format:
-{
-  "disease": "<disease name or 'Healthy / Normal'>",
-  "confidence": <0-100 integer>,
-  "description": "<one sentence summary>",
-  "treatment": "<brief recommended action>",
-  "all_predictions": {
-    "<top label>": <confidence %>,
-    "<2nd label>": <confidence %>,
-    "<3rd label>": <confidence %>
-  }
-}
-
-If the image does not show a plant, set disease to "Not a plant image" and confidence to 0.`
-            }
-          ]
-        }]
-      })
+      body: JSON.stringify({ image: base64Data }),
     });
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
-      throw new Error(err.error?.message || `API error (HTTP ${response.status})`);
+      throw new Error(err.error || `Server error (HTTP ${response.status}). Is the Flask backend running?`);
     }
 
-    const apiData = await response.json();
-    const rawText = apiData.content?.map(b => b.text || '').join('') || '';
-
-    let data;
-    try {
-      const clean = rawText.replace(/```json|```/g, '').trim();
-      data = JSON.parse(clean);
-    } catch {
-      throw new Error('AI returned an unexpected response. Please try again.');
-    }
+    const data = await response.json();
 
     if (analyzing) analyzing.style.display = 'none';
     if (result)    result.style.display    = 'block';
 
     const label     = data.disease || 'Unknown';
+    const conf      = data.confidence != null ? data.confidence : null;
     const isHealthy = label.toLowerCase().includes('normal') || label.toLowerCase().includes('healthy');
 
     if (resultText) {
       resultText.textContent = label;
       resultText.style.color = isHealthy ? 'var(--green)' : 'var(--rose)';
     }
-    if (confidence) confidence.textContent = (data.confidence != null ? data.confidence : '—') + '%';
+    if (confidence) confidence.textContent = conf != null ? `${conf}%` : '—';
 
-    showDescription(data.description, data.treatment);
+    const description = DESCRIPTION_MAP[label] || null;
+    const treatment   = TREATMENT_MAP[label]   || null;
+    showDescription(description, treatment);
     showAllPredictions(data.all_predictions);
 
   } catch (err) {
@@ -357,10 +348,11 @@ If the image does not show a plant, set disease to "Not a plant image" and confi
     if (result)    result.style.display    = 'block';
 
     if (resultText) {
-      resultText.innerHTML = `${err.message || 'Analysis failed. Please try again.'}`;
+      resultText.innerHTML = err.message || 'Analysis failed. Make sure the Flask server is running on port 5000.';
       resultText.style.color = 'var(--amber)';
     }
     if (confidence) confidence.textContent = '—';
+    console.error('analyzeImage error:', err);
   }
 }
 
