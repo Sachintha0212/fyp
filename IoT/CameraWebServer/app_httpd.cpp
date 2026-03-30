@@ -84,14 +84,6 @@ httpd_handle_t camera_httpd = NULL;
 #if CONFIG_ESP_FACE_DETECT_ENABLED
 
 static int8_t detection_enabled = 0;
-
-// #if TWO_STAGE
-// static HumanFaceDetectMSR01 s1(0.1F, 0.5F, 10, 0.2F);
-// static HumanFaceDetectMNP01 s2(0.5F, 0.3F, 5);
-// #else
-// static HumanFaceDetectMSR01 s1(0.3F, 0.5F, 10, 0.2F);
-// #endif
-
 #if CONFIG_ESP_FACE_RECOGNITION_ENABLED
 static int8_t recognition_enabled = 0;
 static int8_t is_enrolling = 0;
