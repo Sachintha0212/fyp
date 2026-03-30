@@ -3,9 +3,8 @@
 #define CAMERA_MODEL_AI_THINKER // Has PSRAM
 #include "camera_pins.h"
 
-// ===========================
 // Enter your WiFi credentials
-// ===========================
+
 const char* ssid = "Dialog 4G 52C";
 const char* password = "6D29862G706";
 
