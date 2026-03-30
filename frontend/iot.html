@@ -665,7 +665,7 @@ function connectEsp() {
   document.getElementById('espFullBtn').href  = url;
 
   // Load ESP32 web UI (CameraWebServer sketch) inside iframe
-  // The Arduino sketch serves a page at / that embeds the MJPEG stream.
+  // The Arduino sketch serves a page at / that embeds the MJPEG stream
   document.getElementById('espFrame').src = url + '/';
 
   document.getElementById('espWrap').classList.add('connected');
