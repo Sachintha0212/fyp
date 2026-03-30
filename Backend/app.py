@@ -22,14 +22,14 @@ MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "ml", "model.keras")
 
 # Sorted alphabetically — matches flow_from_directory training order
 CLASS_NAMES = [
-    "Low light intensity (LI)",     # index 0
-    "Nitrogen Deficiency (ND)",     # index 1
-    "Normal Leaf (NL)",             # index 2
-    "Phosphorus deficiency (PHD)",  # index 3
-    "Potassium Deficiency (PD)",    # index 4
-    "Red mite disease (RM)",        # index 5
-    "Water Deficiency (WD)",        # index 6
-    "Worm Creep Decease (WCD)",     # index 7
+    "Low light intensity (LI)",     
+    "Nitrogen Deficiency (ND)",     
+    "Normal Leaf (NL)",             
+    "Phosphorus deficiency (PHD)",  
+    "Potassium Deficiency (PD)",    
+    "Red mite disease (RM)",        
+    "Water Deficiency (WD)",        
+    "Worm Creep Decease (WCD)",     
 ]
 
 IMG_SIZE = (224, 224)
