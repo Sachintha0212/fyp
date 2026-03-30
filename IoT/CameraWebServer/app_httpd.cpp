@@ -88,13 +88,6 @@ httpd_handle_t camera_httpd = NULL;
 
 static int8_t detection_enabled = 0;
 
-// #if TWO_STAGE
-// static HumanFaceDetectMSR01 s1(0.1F, 0.5F, 10, 0.2F);
-// static HumanFaceDetectMNP01 s2(0.5F, 0.3F, 5);
-// #else
-// static HumanFaceDetectMSR01 s1(0.3F, 0.5F, 10, 0.2F);
-// #endif
-
 #if CONFIG_ESP_FACE_RECOGNITION_ENABLED
 static int8_t recognition_enabled = 0;
 static int8_t is_enrolling = 0;
@@ -237,34 +230,6 @@ static void draw_face_boxes(fb_data_t *fb, std::list<dl::detect::result_t> *resu
 #endif
     }
 }
-
-#if CONFIG_ESP_FACE_RECOGNITION_ENABLED
-static int run_face_recognition(fb_data_t *fb, std::list<dl::detect::result_t> *results)
-{
-    std::vector<int> landmarks = results->front().keypoint;
-    int id = -1;
-
-    Tensor<uint8_t> tensor;
-    tensor.set_element((uint8_t *)fb->data).set_shape({fb->height, fb->width, 3}).set_auto_free(false);
-
-    int enrolled_count = recognizer.get_enrolled_id_num();
-
-    if (enrolled_count < FACE_ID_SAVE_NUMBER && is_enrolling){
-        id = recognizer.enroll_id(tensor, landmarks, "", true);
-        log_i("Enrolled ID: %d", id);
-        rgb_printf(fb, FACE_COLOR_CYAN, "ID[%u]", id);
-    }
-
-    face_info_t recognize = recognizer.recognize(tensor, landmarks);
-    if(recognize.id >= 0){
-        rgb_printf(fb, FACE_COLOR_GREEN, "ID[%u]: %.2f", recognize.id, recognize.similarity);
-    } else {
-        rgb_print(fb, FACE_COLOR_RED, "Intruder Alert!");
-    }
-    return recognize.id;
-}
-#endif
-#endif
 
 #if CONFIG_LED_ILLUMINATOR_ENABLED
 void enable_led(bool en)
