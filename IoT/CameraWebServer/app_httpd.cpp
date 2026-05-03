@@ -1,4 +1,16 @@
-
+// Copyright 2015-2016 Espressif Systems (Shanghai) PTE LTD
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 #include "esp_http_server.h"
 #include "esp_timer.h"
 #include "esp_camera.h"
@@ -12,9 +24,11 @@
 #include "esp32-hal-log.h"
 #endif
 
+// Face Detection will not work on boards without (or with disabled) PSRAM
 #ifdef BOARD_HAS_PSRAM
 #define CONFIG_ESP_FACE_DETECT_ENABLED 1
-
+// Face Recognition takes upward from 15 seconds per frame on chips other than ESP32S3
+// Makes no sense to have it enabled for them
 #if CONFIG_IDF_TARGET_ESP32S3
 #define CONFIG_ESP_FACE_RECOGNITION_ENABLED 1
 #else
@@ -31,7 +45,9 @@
 #include "human_face_detect_msr01.hpp"
 #include "human_face_detect_mnp01.hpp"
 
-#define TWO_STAGE 1 
+#define TWO_STAGE 1 /*<! 1: detect by two-stage which is more accurate but slower(with keypoints). */
+                    /*<! 0: detect by one-stage which is less accurate but faster(without keypoints). */
+
 #if CONFIG_ESP_FACE_RECOGNITION_ENABLED
 #include "face_recognition_tool.hpp"
 #include "face_recognition_112_v1_s16.hpp"
@@ -84,6 +100,13 @@ httpd_handle_t camera_httpd = NULL;
 
 static int8_t detection_enabled = 0;
 
+// #if TWO_STAGE
+// static HumanFaceDetectMSR01 s1(0.1F, 0.5F, 10, 0.2F);
+// static HumanFaceDetectMNP01 s2(0.5F, 0.3F, 5);
+// #else
+// static HumanFaceDetectMSR01 s1(0.3F, 0.5F, 10, 0.2F);
+// #endif
+
 #if CONFIG_ESP_FACE_RECOGNITION_ENABLED
 static int8_t recognition_enabled = 0;
 static int8_t is_enrolling = 0;
@@ -101,11 +124,11 @@ static int8_t is_enrolling = 0;
 
 typedef struct
 {
-    size_t size;  
-    size_t index; 
-    size_t count; 
+    size_t size;  //number of values used for filtering
+    size_t index; //current value index
+    size_t count; //value count
     int sum;
-    int *values; 
+    int *values; //array to be filled with values
 } ra_filter_t;
 
 static ra_filter_t ra_filter;
@@ -226,6 +249,34 @@ static void draw_face_boxes(fb_data_t *fb, std::list<dl::detect::result_t> *resu
 #endif
     }
 }
+
+#if CONFIG_ESP_FACE_RECOGNITION_ENABLED
+static int run_face_recognition(fb_data_t *fb, std::list<dl::detect::result_t> *results)
+{
+    std::vector<int> landmarks = results->front().keypoint;
+    int id = -1;
+
+    Tensor<uint8_t> tensor;
+    tensor.set_element((uint8_t *)fb->data).set_shape({fb->height, fb->width, 3}).set_auto_free(false);
+
+    int enrolled_count = recognizer.get_enrolled_id_num();
+
+    if (enrolled_count < FACE_ID_SAVE_NUMBER && is_enrolling){
+        id = recognizer.enroll_id(tensor, landmarks, "", true);
+        log_i("Enrolled ID: %d", id);
+        rgb_printf(fb, FACE_COLOR_CYAN, "ID[%u]", id);
+    }
+
+    face_info_t recognize = recognizer.recognize(tensor, landmarks);
+    if(recognize.id >= 0){
+        rgb_printf(fb, FACE_COLOR_GREEN, "ID[%u]: %.2f", recognize.id, recognize.similarity);
+    } else {
+        rgb_print(fb, FACE_COLOR_RED, "Intruder Alert!");
+    }
+    return recognize.id;
+}
+#endif
+#endif
 
 #if CONFIG_LED_ILLUMINATOR_ENABLED
 void enable_led(bool en)
