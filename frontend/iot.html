@@ -311,12 +311,12 @@
               <div class="url-row">
                 <i class="fas fa-link"></i>
                 <input class="url-input" id="espUrl" type="text"
-                  value="http://192.168.8.105"
-                  placeholder="http://192.168.8.105">
+                  value="http://192.168.8.101/"
+                  placeholder="http://192.168.8.101/">
                 <button class="btn btn-sky btn-sm" onclick="connectEsp()">
                   <i class="fas fa-plug"></i> Connect
                 </button>
-                <a id="espOpenBtn" href="http://192.168.8.105" target="_blank" rel="noopener"
+                <a id="espOpenBtn" href="http://192.168.8.101/" target="_blank" rel="noopener"
                   class="btn btn-outline btn-sm" title="Open in new tab">
                   <i class="fas fa-external-link-alt"></i>
                 </a>
@@ -345,7 +345,7 @@
                 <button class="btn btn-primary" onclick="snapEsp()" id="espSnapBtn">
                   <i class="fas fa-camera-retro"></i> Snapshot + AI
                 </button>
-                <a id="espFullBtn" href="http://192.168.8.105" target="_blank" rel="noopener"
+                <a id="espFullBtn" href="http://192.168.8.101/" target="_blank" rel="noopener"
                   class="btn btn-outline">
                   <i class="fas fa-expand"></i> Full View
                 </a>
@@ -656,7 +656,7 @@ function setDot(cls, txt) {
    ESP32-CAM
 ══════════════════════════════════════════════════ */
 function espUrl() {
-  return (document.getElementById('espUrl').value || 'http://192.168.8.105').trim().replace(/\/+$/,'');
+  return (document.getElementById('espUrl').value || 'http://192.168.8.101/').trim().replace(/\/+$/,'');
 }
 
 function connectEsp() {
